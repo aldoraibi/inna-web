@@ -1,39 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
-  <style>
-    body { font-family: "Arial", sans-serif; direction: rtl; text-align: center; background: #f9fafb; }
-    header { background: #fff; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
-    h1 { font-size: 28px; margin: 0; }
-    h2 { color: #555; margin-top: 6px; }
-    .container { max-width: 800px; margin: auto; background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    button { font-size: 20px; padding: 10px 20px; margin: 8px; border-radius: 10px; border: none; cursor: pointer; background: #e5e7eb; }
-    button:hover { background: #dbeafe; }
-    .question { font-size: 28px; font-weight: bold; margin-bottom: 12px; }
-    .feedback { margin-top: 10px; font-size: 22px; font-weight: bold; }
-    .correct { color: green; }
-    .wrong { color: red; }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مسابقة إن وأخواتها</title>
+  <link rel="stylesheet" href="style.css?v=1">
 </head>
 <body>
-  <header>
-    <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
-    <h2>اختر الأداة الصحيحة لإتمام المعنى</h2>
-  </header>
+  <div class="wrap">
+    <header class="card center">
+      <h1>مسابقة <span class="brand">إنَّ وأخواتها</span></h1>
+      <p class="muted">تدريب تفاعلي على الحروف الناسخة: إنَّ، لعلَّ، كأنَّ، ليتَ.</p>
+    </header>
 
-  <div class="container">
-    <div id="question" class="question"></div>
-    <div id="choices"></div>
-    <div id="feedback" class="feedback"></div>
-    <button id="next">التالي</button>
+    <section class="card">
+      <h2>اختر الحرف الناسخ</h2>
+      <div class="chips">
+        <button class="chip" data-verb="إنَّ">إنَّ</button>
+        <button class="chip" data-verb="كأنَّ">كأنَّ</button>
+        <button class="chip" data-verb="ليتَ">ليتَ</button>
+        <button class="chip" data-verb="لعلَّ">لعلَّ</button>
+      </div>
+    </section>
+
+    <section class="card live">
+      <div id="live" class="live-sentence"></div>
+    </section>
+
+    <section class="card forms">
+      <div id="mubSection"></div>
+      <div id="khabSection"></div>
+    </section>
+
+    <section class="card center">
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="checkBtn" class="btn primary" disabled>تحقق</button>
+      <button id="nextBtn" class="btn" disabled>التالي</button>
+    </section>
+
+    <footer class="center muted">
+      إعداد وتطوير: يحيى بن محمد الدريبي
+    </footer>
   </div>
 
-  <footer style="margin-top:20px;color:#666">إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي</footer>
-
-  <script src="bank-inna.js"></script>
-  <script src="inna-app.js" defer></script>
+  <script src="bank-inna.js?v=1"></script>
+  <script src="app.js?v=1" defer></script>
 </body>
 </html>

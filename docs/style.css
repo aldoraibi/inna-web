@@ -1,0 +1,19 @@
+
+body{font-family:'Segoe UI','SF Arabic',Arial;background:#0b0f14;color:#fff;margin:0}
+.wrap{max-width:900px;margin:auto;padding:20px}
+.card{background:#11161d;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:10px}
+.center{text-align:center}
+.brand{color:#03c2ff}
+.muted{color:#9aa4af}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{background:#121a23;border:1px solid #1f2a36;color:#cfe6f9;padding:8px 12px;border-radius:999px;cursor:pointer}
+.chip.active{background:rgba(3,194,255,.12);border-color:#1f99be;color:#fff}
+.live-sentence{font-size:32px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.token{padding:4px 6px;border-radius:8px}
+.sel-m{background:rgba(3,194,255,.12);outline:1px solid #1f99be}
+.sel-k{background:rgba(255,255,255,.08);outline:1px solid #39424d}
+.feedback{margin-top:8px;font-size:20px;text-align:center}
+.feedback.ok{color:#2ecc71}
+.feedback.bad{color:#ff6b6b}
+.btn{background:#1f2a36;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
+.btn.primary{background:#03c2ff;color:#000}
