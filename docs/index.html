@@ -3,46 +3,81 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
+  <title>إنَّ وأخواتها — تحديد المبتدأ والخبر ثم الإعراب</title>
   <style>
-    :root{--bg:#f4f6f8;--card:#fff;--txt:#111;--muted:#6b7280;--brand:#2563eb;--ok:#16a34a;--bad:#dc2626;}
-    body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,"Segoe UI",Tahoma,Arial;}
-    .wrap{max-width:880px;margin:24px auto;padding:0 16px;}
-    header{background:var(--card);border-radius:16px;padding:18px 22px;box-shadow:0 1px 2px rgba(0,0,0,.05);}
+    :root{--bg:#f5f7fb;--card:#fff;--txt:#0f172a;--muted:#6b7280;--brand:#2563eb;--ok:#16a34a;--bad:#dc2626}
+    body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,"Segoe UI",Tahoma,Arial}
+    .wrap{max-width:980px;margin:24px auto;padding:0 16px}
+    header{background:var(--card);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:18px 22px}
     h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px)}
     .muted{color:var(--muted)}
-    .card{background:var(--card);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.05);padding:18px 22px;margin-top:16px}
-    .prompt{font-size:clamp(28px,6vw,44px);text-align:center;margin:14px 0 10px;font-weight:800}
-    .choices{display:grid;gap:10px}
-    .btn{display:block;width:100%;text-align:right;border:1px solid #e5e7eb;background:#f8fafc;border-radius:14px;padding:14px 16px;font-size:clamp(18px,3.4vw,26px);cursor:pointer}
-    .btn:hover{background:#f1f5f9}
-    .btn[disabled]{opacity:.6;cursor:not-allowed}
-    .state{display:flex;align-items:center;gap:12px;color:var(--muted);font-weight:600}
-    .row{display:flex;gap:10px;align-items:center;justify-content:center}
-    .primary{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.25)}
-    .ok{background:rgba(22,163,74,.12);border-color:rgba(22,163,74,.25)}
-    .bad{background:rgba(220,38,38,.10);border-color:rgba(220,38,38,.25)}
-    footer{color:#666;text-align:center;margin:22px 0 40px;font-size:14px}
     .counter{display:inline-flex;gap:6px;align-items:center;background:#eef2ff;border-radius:12px;padding:4px 10px;margin-top:8px}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:18px 22px;margin-top:16px}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{border:1px solid #e5e7eb;background:#f8fafc;border-radius:999px;padding:8px 12px;cursor:pointer}
+    .chip.active{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35)}
+    .prompt-live{font-size:clamp(26px,5.5vw,42px);text-align:center;margin:10px 0 6px;font-weight:800}
+    .token{display:inline-block;margin:0 6px 6px 0;padding:2px 6px;border-radius:8px;border:1px solid transparent;cursor:pointer}
+    .token.sel-m{border-color:#fb7185;background:#ffe4e6}
+    .token.sel-k{border-color:#93c5fd;background:#eff6ff}
+    .helper{color:var(--muted);font-size:15px;margin-top:4px}
+    .section-title{font-weight:700;margin:12px 0 6px}
+    .form-chip{border:1px solid #e5e7eb;background:#f8fafc;border-radius:12px;padding:8px 12px;cursor:pointer;margin-inline-end:8px}
+    .form-chip.sel{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.30)}
+    .btn{display:inline-block;border:1px solid #e5e7eb;background:#f8fafc;border-radius:12px;padding:12px 16px;font-size:18px;cursor:pointer}
+    .btn.primary{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.25)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+    .feedback{padding:12px;border-radius:12px;margin-top:10px}
+    .feedback.ok{background:rgba(22,163,74,.10);border:1px solid rgba(22,163,74,.25)}
+    .feedback.bad{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25)}
+    .name-red{color:#dc2626;font-weight:800}
+    .khabar-blue{color:#1d4ed8;font-weight:800}
+    footer{color:#666;text-align:center;margin:22px 0 40px;font-size:14px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
-      <div class="muted">اختر الأداة الصحيحة لإتمام المعنى</div>
+      <h1>إنَّ وأخواتها — تدريب خطوة بخطوة</h1>
+      <div class="muted">حدِّد المبتدأ والخبر أولًا، ثم اختر الأداة الناسخة، ثم صيغة <b>اسم إنَّ</b> و<b>خبرها</b> الصحيحتين.</div>
       <div class="counter"><span>عدد الزوار:</span><b id="visitors">–</b></div>
     </header>
 
     <div class="card">
-      <div class="state">
+      <div class="row" style="justify-content:space-between">
         <div>السؤال <b id="qnum">1</b> / <span id="qtotal">0</span></div>
+        <div class="muted" id="stepHint">① عيِّن المبتدأ والخبر من الجملة</div>
       </div>
-      <div id="prompt" class="prompt"></div>
-      <div id="choices" class="choices"></div>
-      <div id="feedback" class="card" style="display:none;margin-top:12px"></div>
 
-      <div class="row" style="margin-top:12px">
+      <div id="live" class="prompt-live"></div>
+
+      <div class="section">
+        <div class="section-title">الأداة الناسخة</div>
+        <div class="chips" id="verbChips">
+          <span class="chip" data-verb="إنَّ">إنَّ</span>
+          <span class="chip" data-verb="ليتَ">ليتَ</span>
+          <span class="chip" data-verb="لعلَّ">لعلَّ</span>
+          <span class="chip" data-verb="كأنَّ">كأنَّ</span>
+        </div>
+        <div class="helper">اختر الأداة بعد تحديد المبتدأ والخبر.</div>
+      </div>
+
+      <div class="row" style="gap:22px">
+        <div style="flex:1">
+          <div class="section-title">صيغة اسم إنَّ</div>
+          <div id="mubForms"></div>
+        </div>
+        <div style="flex:1">
+          <div class="section-title">صيغة الخبر</div>
+          <div id="khabForms"></div>
+        </div>
+      </div>
+
+      <div id="feedback" class="feedback" style="display:none"></div>
+
+      <div class="row" style="justify-content:center;margin-top:12px">
+        <button id="checkBtn" class="btn">تحقق</button>
         <button id="nextBtn" class="btn primary" disabled>التالي</button>
       </div>
     </div>
@@ -52,95 +87,7 @@
     </footer>
   </div>
 
-  <!-- بنك الجمل -->
-  <script src="bank-inna.js?v=1"></script>
-
-  <script>
-    // عدّاد زوار بسيط يعمل على المتصفّح (بدون سيرفر)
-    (function(){
-      try{
-        const KEY='inna_visitors_key_v1';
-        let n = localStorage.getItem(KEY);
-        if(!n){ n = String(Math.floor(Math.random()*100)+1); localStorage.setItem(KEY, n); }
-        document.getElementById('visitors').textContent = n;
-      }catch(e){
-        document.getElementById('visitors').textContent = '—';
-      }
-    })();
-
-    // بيانات الاختبار
-    const items = (typeof INNA_ITEMS!=='undefined') ? INNA_ITEMS.slice() : [];
-    // خلط الأسئلة ترتيبًا:
-    for(let i=items.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [items[i],items[j]]=[items[j],items[i]]; }
-
-    // عناصر الواجهة
-    const promptEl  = document.getElementById('prompt');
-    const choicesEl = document.getElementById('choices');
-    const nextBtn   = document.getElementById('nextBtn');
-    const qnum      = document.getElementById('qnum');
-    const qtotal    = document.getElementById('qtotal');
-    const feedback  = document.getElementById('feedback');
-
-    qtotal.textContent = items.length;
-
-    let idx=0, locked=false, answered=false;
-
-    function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
-
-    function render(){
-      if(!items.length){ promptEl.textContent='لا توجد أسئلة.'; return; }
-      const it = items[idx];
-      qnum.textContent = idx+1;
-      promptEl.textContent = it.prompt;
-      choicesEl.innerHTML = '';
-      feedback.style.display='none';
-      answered=false; locked=false; nextBtn.disabled=true;
-
-      // نبني خيارات الأزرار مع خلط
-      const cs = it.choices.map((c,i)=>({text:c, correct:i===it.correct}));
-      shuffle(cs);
-      cs.forEach(obj=>{
-        const b=document.createElement('button');
-        b.className='btn';
-        b.textContent=obj.text;
-        b.onclick=()=>pick(obj);
-        choicesEl.appendChild(b);
-      });
-    }
-
-    function pick(obj){
-      if(locked) return;
-      locked=true; answered=true; nextBtn.disabled=false;
-
-      const correctText = items[idx].choices[items[idx].correct];
-      const buttons=[...choicesEl.querySelectorAll('button')];
-
-      buttons.forEach(btn=>{
-        const isCorrect = (btn.textContent===correctText);
-        if(isCorrect) btn.classList.add('ok');
-        else if(btn.textContent===obj.text) btn.classList.add('bad');
-        btn.disabled=true;
-      });
-
-      feedback.style.display='block';
-      if(obj.text===correctText){
-        feedback.textContent='أحسنت! اختيارك صحيح.';
-        // انتقال تلقائي بعد ثانيتين عند الصح
-        setTimeout(()=>{ goNext(); }, 2000);
-      }else{
-        feedback.textContent='إجابة غير صحيحة — الصحيح: «'+correctText+'».';
-      }
-    }
-
-    function goNext(){
-      if(!answered) return;
-      idx = (idx+1) % items.length;
-      render();
-    }
-
-    nextBtn.addEventListener('click', goNext);
-
-    render();
-  </script>
+  <script src="bank-nominals.js?v=1"></script>
+  <script src="app.js?v=1" defer></script>
 </body>
 </html>
