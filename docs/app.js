@@ -1,196 +1,165 @@
-/* إنَّ وأخواتها — تدرّج: اختيار المبتدأ/الخبر → الأداة → صيغ الإعراب */
-const VERBS = ["إنَّ","ليتَ","لعلَّ","كأنَّ"]; // نطاق التمرين المطلوب
+// ==================== عداد الزوار الحقيقي ====================
+const counterUrl = "https://api.countapi.xyz/hit/inna-web/visitors";
 
-// الحالة العامة
-const S = {
-  i: 0,                   // فهرس السؤال
-  verb: null,             // الأداة المختارة
-  mCase: null, kCase: null, // m=مرفوع a=منصوب j=مجرور
-  mPick: null, kPick: null, // فهارس الكلمات (لو كان المركب أكثر من كلمة)
-  ok: false
-};
+async function updateVisitorCount() {
+  try {
+    const response = await fetch(counterUrl);
+    const data = await response.json();
+    document.getElementById("visitor-count").textContent = data.value;
+  } catch {
+    document.getElementById("visitor-count").textContent = "—";
+  }
+}
+updateVisitorCount();
 
-// عناصر DOM
-const liveEl   = document.getElementById("live");
-const mubForms = document.getElementById("mubForms");
-const khabForms= document.getElementById("khabForms");
+// ==================== المتغيرات العامة ====================
+let currentQuestionIndex = 0;
+let score = 0;
+let currentStep = 1;
+let currentQuestion = {};
+let selectedSubject = "";
+let selectedPredicate = "";
+let selectedParticle = "";
+let selectedInnaName = "";
+let selectedInnaPredicate = "";
+
+const startBtn = document.getElementById("start-btn");
+const questionArea = document.getElementById("question-area");
+const intro = document.getElementById("intro");
 const feedback = document.getElementById("feedback");
-const checkBtn = document.getElementById("checkBtn");
-const nextBtn  = document.getElementById("nextBtn");
-const stepHint = document.getElementById("stepHint");
-const qnum     = document.getElementById("qnum");
-const qtotal   = document.getElementById("qtotal");
+const nextBtn = document.getElementById("next-btn");
+const resultArea = document.getElementById("result-area");
+const scoreDisplay = document.getElementById("score");
 
-// عدّاد زوار بسيط (محلي)
-(function(){
-  try{
-    const KEY='inna_step_visitors_v1';
-    let n = localStorage.getItem(KEY);
-    if(!n){ n = String(Math.floor(Math.random()*100)+1); localStorage.setItem(KEY, n); }
-    document.getElementById('visitors').textContent = n;
-  }catch(e){ document.getElementById('visitors').textContent = '—'; }
-})();
+// ==================== البدء ====================
+startBtn.addEventListener("click", startGame);
+nextBtn.addEventListener("click", nextQuestion);
 
-// أدوات مساعدة
-const $ = s=>document.querySelector(s);
-const ITEMS = (typeof INNA_NOMINALS!=="undefined") ? INNA_NOMINALS.slice() : [];
-shuffle(ITEMS);
-qtotal.textContent = ITEMS.length || 0;
-
-function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]] } return a; }
-function splitTokens(t){ return t.trim().split(/\s+/); }
-function cur(){ return ITEMS[S.i]; }
-function form(forms, code){ return forms[code ?? "m"]; }
-
-// إذا تعددت الكلمات في المبتدأ/الخبر نحتاج اختيار أي كلمة نلوّنها ونبني عليها صيغ العرض
-function tokenForm(forms, idx){
-  const mT = splitTokens(forms.m), aT = splitTokens(forms.a), jT = splitTokens(forms.j);
-  const i  = Math.min(idx ?? 0, Math.max(mT.length,1)-1);
-  return { m: mT[i] ?? forms.m, a: aT[i] ?? forms.a, j: jT[i] ?? forms.j };
+function startGame() {
+  score = 0;
+  currentQuestionIndex = 0;
+  intro.classList.add("hidden");
+  questionArea.classList.remove("hidden");
+  resultArea.classList.add("hidden");
+  showQuestion();
 }
 
-function renderLive(){
-  const M = cur().mub, K = cur().khb;
-  const mBase = form(M, S.mCase ?? "m");
-  const kBase = form(K, S.kCase ?? "m");
-  const mTokens = splitTokens(mBase), kTokens = splitTokens(kBase);
+// ==================== عرض السؤال ====================
+function showQuestion() {
+  feedback.classList.add("hidden");
+  nextBtn.classList.add("hidden");
+  currentStep = 1;
 
-  const parts = [];
-  // الأداة (بعد الاختيار)
-  if(S.verb){ parts.push(`<span class="token" style="border:1px dashed #ddd">${S.verb}</span>`); }
+  currentQuestion = bank100Inna[currentQuestionIndex];
+  document.getElementById("sentence").textContent = currentQuestion.sentence;
 
-  mTokens.forEach((tok,i)=>{
-    const sel = (S.mPick===i) ? "token sel-m" : "token";
-    parts.push(`<span class="${sel}" data-m="${i}">${tok}</span>`);
-  });
-  kTokens.forEach((tok,i)=>{
-    const sel = (S.kPick===i) ? "token sel-k" : "token";
-    parts.push(`<span class="${sel}" data-k="${i}">${tok}</span>`);
-  });
-  liveEl.innerHTML = parts.join(" ");
-
-  // التفاعلات
-  liveEl.querySelectorAll("[data-m]").forEach(el=> el.onclick=()=>{ S.mPick=+el.dataset.m; refresh(false); });
-  liveEl.querySelectorAll("[data-k]").forEach(el=> el.onclick=()=>{ S.kPick=+el.dataset.k; refresh(false); });
+  showStep1();
 }
 
-function renderVerbChips(){
-  const box = document.getElementById("verbChips");
-  box.querySelectorAll(".chip").forEach(ch=>{
-    if(ch.dataset.verb===S.verb) ch.classList.add("active"); else ch.classList.remove("active");
-    ch.onclick = ()=>{ S.verb = ch.dataset.verb; refresh(false); };
+// =========== الخطوة 1: المبتدأ ===========
+function showStep1() {
+  showStep("step1");
+  renderChoices("choices-subject", currentQuestion.subjectChoices, (choice) => {
+    selectedSubject = choice;
+    showStep2();
   });
 }
 
-function renderForms(){
-  const needMPick = splitTokens(form(cur().mub, S.mCase ?? "m")).length>1 && (S.mPick==null);
-  const needKPick = splitTokens(form(cur().khb, S.kCase ?? "m")).length>1 && (S.kPick==null);
-
-  // اسم إنَّ — يجب أن يكون "منصوب" (a)
-  mubForms.innerHTML = needMPick ? `<div class="helper">اختر المبتدأ من الجملة أولًا بالضغط على الكلمة الصحيحة أعلاه.</div>`
-    : renderBlock("mCase", tokenForm(cur().mub, S.mPick), S.mCase);
-
-  // خبر إنَّ — يجب أن يكون "مرفوع" (m)
-  khabForms.innerHTML = needKPick ? `<div class="helper">اختر الخبر من الجملة أولًا بالضغط على الكلمة الصحيحة أعلاه.</div>`
-    : renderBlock("kCase", tokenForm(cur().khb, S.kPick), S.kCase);
-
-  // أربط الأزرار
-  mubForms.querySelectorAll("[data-case]").forEach(b=> b.onclick=()=>{ S.mCase = b.dataset.case; refresh(false); });
-  khabForms.querySelectorAll("[data-case]").forEach(b=> b.onclick=()=>{ S.kCase = b.dataset.case; refresh(false); });
+// =========== الخطوة 2: الخبر ===========
+function showStep2() {
+  showStep("step2");
+  renderChoices("choices-predicate", currentQuestion.predicateChoices, (choice) => {
+    selectedPredicate = choice;
+    showStep3();
+  });
 }
 
-function renderBlock(bindKey, tf, selected){
-  const lab = { m:"مرفوع", a:"منصوب", j:"مجرور" };
-  const chip = (txt,code)=>`<button class="form-chip ${selected===code?'sel':''}" data-case="${code}">${txt}</button>`;
-  return `
-    <div class="chips">
-      ${chip(tf.m+" — "+lab.m,"m")}
-      ${chip(tf.a+" — "+lab.a,"a")}
-      ${chip(tf.j+" — "+lab.j,"j")}
-    </div>
-    <div class="helper">اختر الحالة الإعرابية الصحيحة.</div>
-  `;
+// =========== الخطوة 3: الحرف الناسخ ===========
+function showStep3() {
+  showStep("step3");
+  renderChoices("choices-particle", currentQuestion.particleChoices, (choice) => {
+    selectedParticle = choice;
+    showStep4();
+  });
 }
 
-function readyToCheck(){
-  const havePicks = (S.mPick!=null) && (S.kPick!=null);
-  const haveVerb  = !!S.verb;
-  const haveForms = !!S.mCase && !!S.kCase;
-  return havePicks && haveVerb && haveForms;
+// =========== الخطوة 4: اسم إنَّ ===========
+function showStep4() {
+  showStep("step4");
+  renderChoices("choices-inna-name", currentQuestion.innaNameChoices, (choice) => {
+    selectedInnaName = choice;
+    showStep5();
+  });
 }
 
-function check(){
-  if(!readyToCheck()) return;
+// =========== الخطوة 5: خبر إنَّ ===========
+function showStep5() {
+  showStep("step5");
+  renderChoices("choices-inna-predicate", currentQuestion.innaPredicateChoices, (choice) => {
+    selectedInnaPredicate = choice;
+    checkAnswer();
+  });
+}
 
-  // شروط الصحة:
-  // اسم إنَّ = منصوب (a) ، خبر إنَّ = مرفوع (m) ، والاختيار كان أول كلمة في كل مركّب
-  const mOK = (S.mCase==="a");
-  const kOK = (S.kCase==="m");
+// ==================== عرض الخطوة المحددة ====================
+function showStep(stepId) {
+  document.querySelectorAll(".step").forEach(s => s.classList.add("hidden"));
+  document.getElementById(stepId).classList.remove("hidden");
+}
 
-  const mNeedPick = splitTokens(form(cur().mub, S.mCase ?? "m")).length>1;
-  const kNeedPick = splitTokens(form(cur().khb, S.kCase ?? "m")).length>1;
-  const mPickOK = !mNeedPick || S.mPick===0;
-  const kPickOK = !kNeedPick || S.kPick===0;
+// ==================== عرض الخيارات ====================
+function renderChoices(containerId, choices, callback) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  choices.forEach(choice => {
+    const btn = document.createElement("div");
+    btn.className = "choice";
+    btn.textContent = choice;
+    btn.addEventListener("click", () => {
+      container.querySelectorAll(".choice").forEach(c => c.classList.remove("selected"));
+      btn.classList.add("selected");
+      callback(choice);
+    });
+    container.appendChild(btn);
+  });
+}
 
-  const allOK = mOK && kOK && mPickOK && kPickOK;
+// ==================== التحقق من الإجابة ====================
+function checkAnswer() {
+  const correct =
+    selectedSubject === currentQuestion.correctSubject &&
+    selectedPredicate === currentQuestion.correctPredicate &&
+    selectedParticle === currentQuestion.correctParticle &&
+    selectedInnaName === currentQuestion.correctInnaName &&
+    selectedInnaPredicate === currentQuestion.correctInnaPredicate;
 
-  if(allOK){
-    S.ok = true;
-    feedback.className="feedback ok";
-    feedback.style.display='block';
-    feedback.textContent = "أحسنت! مع إنَّ وأخواتها: اسمها منصوب وخبرها مرفوع.";
+  feedback.classList.remove("hidden");
+  if (correct) {
+    feedback.innerHTML = `
+      <p style="color:green;font-weight:bold;">ممتاز! ✅</p>
+      <p><span style="color:red;">${currentQuestion.correctInnaName}</span> 
+      <span style="color:blue;">${currentQuestion.correctInnaPredicate}</span></p>`;
+    score++;
+  } else {
+    feedback.innerHTML = `<p style="color:red;font-weight:bold;">إجابة غير صحيحة ❌</p>`;
+  }
 
-    // أعِد بناء الجملة مُلوَّنة
-    const M = tokenForm(cur().mub, 0); // نُبرز أول كلمة من المركب
-    const K = tokenForm(cur().khb, 0);
-    const red  = `<span class="name-red">${M.a}</span>`; // اسم إن منصوب
-    const blue = `<span class="khabar-blue">${K.m}</span>`; // خبر إن مرفوع
-    liveEl.innerHTML = `${S.verb?`<span class="token" style="border:1px dashed #ddd">${S.verb}</span>`:""} ${red} ${blue}`;
+  nextBtn.classList.remove("hidden");
+}
 
-    nextBtn.disabled=false;
-  }else{
-    S.ok = false;
-    const tips=[];
-    if(!mOK) tips.push("اسم إنَّ يجب أن يكون منصوبًا");
-    if(!kOK) tips.push("خبر إنَّ يجب أن يكون مرفوعًا");
-    if(!mPickOK) tips.push("المبتدأ هو أوّل كلمة في التركيب الاسمي");
-    if(!kPickOK) tips.push("الخبر هو أوّل كلمة في التركيب الخبري");
-    feedback.className="feedback bad";
-    feedback.style.display='block';
-    feedback.textContent = "تحقق مرة أخرى: " + tips.join("، ") + ".";
-    nextBtn.disabled=true;
+// ==================== السؤال التالي ====================
+function nextQuestion() {
+  currentQuestionIndex++;
+  if (currentQuestionIndex < bank100Inna.length) {
+    showQuestion();
+  } else {
+    endGame();
   }
 }
 
-function next(){
-  if(!S.ok) return;
-  S.i = (S.i+1) % ITEMS.length;
-  S.verb=null; S.mCase=null; S.kCase=null;
-  S.mPick=null; S.kPick=null; S.ok=false;
-  refresh(true);
+// ==================== نهاية الجولة ====================
+function endGame() {
+  questionArea.classList.add("hidden");
+  resultArea.classList.remove("hidden");
+  scoreDisplay.textContent = `نتيجتك: ${score} من ${bank100Inna.length}`;
 }
-
-function refresh(resetFb){
-  if(!ITEMS.length){
-    liveEl.textContent = "لا توجد أسئلة في البنك.";
-    return;
-  }
-  qnum.textContent = S.i+1;
-  renderLive();
-  renderVerbChips();
-  renderForms();
-
-  const stage = (!S.mPick||!S.kPick) ? "① عيِّن المبتدأ والخبر"
-              : (!S.verb) ? "② اختر الأداة الناسخة"
-              : (!S.mCase||!S.kCase) ? "③ اختر صيغة اسم إنَّ والخبر"
-              : "جاهز للتحقق";
-  stepHint.textContent = stage;
-
-  if(resetFb){ feedback.style.display='none'; }
-}
-
-document.getElementById("checkBtn").onclick = check;
-document.getElementById("nextBtn").onclick  = next;
-
-// تشغيل
-refresh(true);
