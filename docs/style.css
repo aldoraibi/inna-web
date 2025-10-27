@@ -1,19 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
 
-body{font-family:'Segoe UI','SF Arabic',Arial;background:#0b0f14;color:#fff;margin:0}
-.wrap{max-width:900px;margin:auto;padding:20px}
-.card{background:#11161d;border:1px solid #222;border-radius:16px;padding:16px;margin-bottom:10px}
-.center{text-align:center}
-.brand{color:#03c2ff}
-.muted{color:#9aa4af}
-.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.chip{background:#121a23;border:1px solid #1f2a36;color:#cfe6f9;padding:8px 12px;border-radius:999px;cursor:pointer}
-.chip.active{background:rgba(3,194,255,.12);border-color:#1f99be;color:#fff}
-.live-sentence{font-size:32px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
-.token{padding:4px 6px;border-radius:8px}
-.sel-m{background:rgba(3,194,255,.12);outline:1px solid #1f99be}
-.sel-k{background:rgba(255,255,255,.08);outline:1px solid #39424d}
-.feedback{margin-top:8px;font-size:20px;text-align:center}
-.feedback.ok{color:#2ecc71}
-.feedback.bad{color:#ff6b6b}
-.btn{background:#1f2a36;color:#fff;padding:8px 14px;border:none;border-radius:8px;cursor:pointer}
-.btn.primary{background:#03c2ff;color:#000}
+body {
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  direction: rtl;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(160deg, #fdfcfb 0%, #e2d1c3 100%);
+  color: #222;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+.container {
+  width: 95%;
+  max-width: 800px;
+  background: #ffffffcc;
+  margin: 30px auto;
+  padding: 20px 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 32px;
+  color: #0077b6;
+  margin-bottom: 5px;
+}
+
+h2 {
+  font-size: 20px;
+  color: #444;
+}
+
+h3 {
+  color: #0077b6;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+button {
+  font-family: 'Amiri', serif;
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #0096c7;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.choice {
+  background: #f0f8ff;
+  border: 2px solid #0077b6;
+  border-radius: 12px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-size: 22px;
+  transition: 0.3s;
+}
+
+.choice:hover {
+  background: #caf0f8;
+}
+
+.choice.correct {
+  background: #caffbf;
+  border-color: #2d6a4f;
+}
+
+.choice.wrong {
+  background: #ffc9c9;
+  border-color: #9d0208;
+}
+
+.hidden {
+  display: none;
+}
+
+.feedback {
+  font-size: 22px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+#sentence {
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+footer {
+  text-align: center;
+  font-size: 18px;
+  color: #333;
+  margin-top: 25px;
+  border-top: 1px solid #ccc;
+  padding-top: 15px;
+}
+
+#visitor-counter {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #0077b6;
+  font-weight: bold;
+}
