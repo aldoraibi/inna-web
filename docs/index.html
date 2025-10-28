@@ -12,7 +12,7 @@
     h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px)}
     .muted{color:var(--muted)}
     .counter{display:inline-flex;gap:6px;align-items:center;background:#eef2ff;border-radius:12px;padding:4px 10px;margin-top:8px}
-    .counter b{font-size:18px;color:var(--brand);transition:all 0.3s ease;}
+    .counter b{font-size:18px;color:var(--brand);transition:all .3s ease;}
     .card{background:var(--card);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:18px 22px;margin-top:16px}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chips{display:flex;gap:8px;flex-wrap:wrap}
@@ -37,6 +37,7 @@
     footer{color:#666;text-align:center;margin:22px 0 40px;font-size:14px}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -83,34 +84,29 @@
       </div>
     </div>
 
-    <footer>
-      إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
-    </footer>
+    <footer>إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي</footer>
   </div>
 
-  <script src="docs/bank-inna.js?v=1"></script>
-<script src="docs/app.js?v=1" defer></script>
+  <!-- ✅ ملفات الجمل والمنطق -->
+  <script src="bank-inna.js?v=3"></script>
+  <script src="app.js?v=3" defer></script>
 
-  <!-- ✨ عداد الزوار المتدرج -->
+  <!-- ✨ عداد الزوار المتدرّج -->
   <script>
     const counterUrl = "https://api.countapi.xyz/hit/inna-web/visitors";
-    async function animateCount(element, target) {
+    async function animateCount(el, target) {
       let start = 0;
-      const step = target / 60; // السرعة
+      const step = target / 60;
       const timer = setInterval(() => {
         start += step;
-        if (start >= target) {
-          start = target;
-          clearInterval(timer);
-        }
-        element.textContent = Math.floor(start);
+        if (start >= target) { start = target; clearInterval(timer); }
+        el.textContent = Math.floor(start);
       }, 20);
     }
-
     async function updateVisitorCount() {
       try {
-        const response = await fetch(counterUrl);
-        const data = await response.json();
+        const res = await fetch(counterUrl);
+        const data = await res.json();
         const el = document.getElementById("visitor-count");
         animateCount(el, data.value);
       } catch {
@@ -119,7 +115,5 @@
     }
     updateVisitorCount();
   </script>
-<script src="bank-inna.js?v=3"></script>
-<script src="app.js?v=3" defer></script>
 </body>
 </html>
