@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنَّ وأخواتها — تحديد المبتدأ والخبر ثم الإعراب</title>
+  <title>إنَّ وأخواتها — تحديد المبتدأ والخبر ثم الإعراب</title>
   <style>
     :root{--bg:#f5f7fb;--card:#fff;--txt:#0f172a;--muted:#6b7280;--brand:#2563eb;--ok:#16a34a;--bad:#dc2626}
     body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,"Segoe UI",Tahoma,Arial}
@@ -12,6 +12,7 @@
     h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px)}
     .muted{color:var(--muted)}
     .counter{display:inline-flex;gap:6px;align-items:center;background:#eef2ff;border-radius:12px;padding:4px 10px;margin-top:8px}
+    .counter b{font-size:18px;color:var(--brand);transition:all 0.3s ease;}
     .card{background:var(--card);border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.06);padding:18px 22px;margin-top:16px}
     .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .chips{display:flex;gap:8px;flex-wrap:wrap}
@@ -39,33 +40,33 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>إنَّ وأخواتها — تدريب خطوة بخطوة</h1>
-      <div class="muted">حدِّد المبتدأ والخبر أولًا، ثم اختر الأداة الناسخة، ثم صيغة <b>اسم إنَّ</b> و<b>خبرها</b> الصحيحتين.</div>
-      <div class="counter"><span>عدد الزوار:</span><b id="visitors">–</b></div>
+      <h1>إنَّ وأخواتها — تدريب خطوة بخطوة</h1>
+      <div class="muted">حدِّد المبتدأ والخبر أولًا، ثم اختر الأداة الناسخة، ثم صيغة <b>اسم إنَّ</b> و<b>خبرها</b> الصحيحتين.</div>
+      <div class="counter"><span>عدد الزوار:</span><b id="visitor-count">0</b></div>
     </header>
 
     <div class="card">
       <div class="row" style="justify-content:space-between">
         <div>السؤال <b id="qnum">1</b> / <span id="qtotal">0</span></div>
-        <div class="muted" id="stepHint">① عيِّن المبتدأ والخبر من الجملة</div>
+        <div class="muted" id="stepHint">① عيِّن المبتدأ والخبر من الجملة</div>
       </div>
 
-      <div id="live" class="prompt-live"></div>
+      <div id="sentence" class="prompt-live"></div>
 
       <div class="section">
         <div class="section-title">الأداة الناسخة</div>
         <div class="chips" id="verbChips">
-          <span class="chip" data-verb="إنَّ">إنَّ</span>
+          <span class="chip" data-verb="إنَّ">إنَّ</span>
           <span class="chip" data-verb="ليتَ">ليتَ</span>
-          <span class="chip" data-verb="لعلَّ">لعلَّ</span>
-          <span class="chip" data-verb="كأنَّ">كأنَّ</span>
+          <span class="chip" data-verb="لعلَّ">لعلَّ</span>
+          <span class="chip" data-verb="كأنَّ">كأنَّ</span>
         </div>
         <div class="helper">اختر الأداة بعد تحديد المبتدأ والخبر.</div>
       </div>
 
       <div class="row" style="gap:22px">
         <div style="flex:1">
-          <div class="section-title">صيغة اسم إنَّ</div>
+          <div class="section-title">صيغة اسم إنَّ</div>
           <div id="mubForms"></div>
         </div>
         <div style="flex:1">
@@ -89,5 +90,34 @@
 
   <script src="bank-inna.js?v=1"></script>
   <script src="app.js?v=1" defer></script>
+
+  <!-- ✨ عداد الزوار المتدرج -->
+  <script>
+    const counterUrl = "https://api.countapi.xyz/hit/inna-web/visitors";
+    async function animateCount(element, target) {
+      let start = 0;
+      const step = target / 60; // السرعة
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) {
+          start = target;
+          clearInterval(timer);
+        }
+        element.textContent = Math.floor(start);
+      }, 20);
+    }
+
+    async function updateVisitorCount() {
+      try {
+        const response = await fetch(counterUrl);
+        const data = await response.json();
+        const el = document.getElementById("visitor-count");
+        animateCount(el, data.value);
+      } catch {
+        document.getElementById("visitor-count").textContent = "—";
+      }
+    }
+    updateVisitorCount();
+  </script>
 </body>
 </html>
