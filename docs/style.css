@@ -1,127 +1,207 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
+/* ================================
+   تصميم واجهة برنامج (إنَّ وأخواتها)
+   إعداد: الأستاذ يحيى بن محمد الدريبي
+================================ */
 
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --txt: #0f172a;
+  --muted: #6b7280;
+  --brand: #2563eb;
+  --ok: #16a34a;
+  --bad: #dc2626;
+}
+
+/* === إعداد الصفحة الأساسية === */
 body {
-  font-family: 'Amiri', 'Traditional Arabic', serif;
-  direction: rtl;
   margin: 0;
-  padding: 0;
-  background: linear-gradient(160deg, #fdfcfb 0%, #e2d1c3 100%);
-  color: #222;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: system-ui, "Segoe UI", Tahoma, Arial;
+  line-height: 1.6;
 }
 
-.container {
-  width: 95%;
-  max-width: 800px;
-  background: #ffffffcc;
-  margin: 30px auto;
-  padding: 20px 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+/* === الإطار العام === */
+.wrap {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 0 16px;
 }
 
+/* === الترويسة === */
 header {
-  text-align: center;
-  margin-bottom: 20px;
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 18px 22px;
+  margin-bottom: 12px;
 }
 
 h1 {
-  font-size: 32px;
-  color: #0077b6;
-  margin-bottom: 5px;
+  margin: 0 0 6px;
+  font-size: clamp(22px, 4vw, 34px);
 }
 
-h2 {
-  font-size: 20px;
-  color: #444;
+.muted {
+  color: var(--muted);
 }
 
-h3 {
-  color: #0077b6;
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-button {
-  font-family: 'Amiri', serif;
-  background-color: #0077b6;
-  color: white;
-  border: none;
+.counter {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: #eef2ff;
   border-radius: 12px;
-  padding: 12px 18px;
-  font-size: 20px;
-  cursor: pointer;
+  padding: 4px 10px;
+  margin-top: 8px;
+}
+
+.counter b {
+  font-size: 18px;
+  color: var(--brand);
   transition: all 0.3s ease;
 }
 
-button:hover {
-  background-color: #0096c7;
+/* === البطاقات والمحتوى === */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  padding: 18px 22px;
+  margin-top: 16px;
 }
 
-.choices {
+/* === الصفوف والعناصر === */
+.row {
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
-  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.choice {
-  background: #f0f8ff;
-  border: 2px solid #0077b6;
-  border-radius: 12px;
-  padding: 10px 18px;
+/* === خيارات الأداة الناسخة === */
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 999px;
+  padding: 8px 12px;
   cursor: pointer;
-  font-size: 22px;
-  transition: 0.3s;
+  transition: all 0.2s ease;
 }
 
-.choice:hover {
-  background: #caf0f8;
+.chip:hover {
+  background: rgba(37, 99, 235, 0.08);
 }
 
-.choice.correct {
-  background: #caffbf;
-  border-color: #2d6a4f;
+.chip.active {
+  background: rgba(37, 99, 235, 0.12);
+  border-color: rgba(37, 99, 235, 0.35);
 }
 
-.choice.wrong {
-  background: #ffc9c9;
-  border-color: #9d0208;
-}
-
-.hidden {
-  display: none;
-}
-
-.feedback {
-  font-size: 22px;
+/* === الجملة الرئيسية === */
+.prompt-live {
+  font-size: clamp(26px, 5.5vw, 42px);
   text-align: center;
-  margin-top: 15px;
+  margin: 10px 0 6px;
+  font-weight: 800;
+  transition: transform 0.3s ease;
 }
 
-#sentence {
-  font-size: 26px;
-  font-weight: bold;
-  text-align: center;
-  color: #333;
-  margin-bottom: 10px;
+.prompt-live:hover {
+  transform: scale(1.03);
 }
 
-footer {
-  text-align: center;
+/* === النماذج (اسم إن وخبرها) === */
+.section-title {
+  font-weight: 700;
+  margin: 12px 0 6px;
+}
+
+.form-chip {
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-inline-end: 8px;
+  transition: all 0.2s ease;
+}
+
+.form-chip:hover {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.form-chip.sel {
+  background: rgba(37, 99, 235, 0.10);
+  border-color: rgba(37, 99, 235, 0.30);
+}
+
+/* === الأزرار === */
+.btn {
+  display: inline-block;
+  border: 1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px 16px;
   font-size: 18px;
-  color: #333;
-  margin-top: 25px;
-  border-top: 1px solid #ccc;
-  padding-top: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-#visitor-counter {
-  font-size: 20px;
-  margin-bottom: 8px;
-  color: #0077b6;
-  font-weight: bold;
+.btn:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.btn.primary {
+  background: rgba(37, 99, 235, 0.12);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === التغذية الراجعة === */
+.feedback {
+  padding: 12px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+.feedback.ok {
+  background: rgba(22, 163, 74, 0.10);
+  border: 1px solid rgba(22, 163, 74, 0.25);
+}
+
+.feedback.bad {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+/* === ألوان المخرجات === */
+.name-red {
+  color: #dc2626;
+  font-weight: 800;
+}
+
+.khabar-blue {
+  color: #1d4ed8;
+  font-weight: 800;
+}
+
+/* === التذييل === */
+footer {
+  color: #666;
+  text-align: center;
+  margin: 22px 0 40px;
+  font-size: 14px;
 }
