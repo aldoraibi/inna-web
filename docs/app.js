@@ -15,7 +15,6 @@ updateVisitorCount();
 // ==================== المتغيرات العامة ====================
 let currentQuestionIndex = 0;
 let score = 0;
-let currentStep = 1;
 let currentQuestion = {};
 let selectedSubject = "";
 let selectedPredicate = "";
@@ -23,143 +22,133 @@ let selectedParticle = "";
 let selectedInnaName = "";
 let selectedInnaPredicate = "";
 
-const startBtn = document.getElementById("start-btn");
-const questionArea = document.getElementById("question-area");
-const intro = document.getElementById("intro");
+// ==================== عناصر الصفحة ====================
 const feedback = document.getElementById("feedback");
-const nextBtn = document.getElementById("next-btn");
-const resultArea = document.getElementById("result-area");
-const scoreDisplay = document.getElementById("score");
+const nextBtn = document.getElementById("nextBtn");
+const checkBtn = document.getElementById("checkBtn");
+const qnum = document.getElementById("qnum");
+const qtotal = document.getElementById("qtotal");
+const sentenceBox = document.getElementById("sentence");
+const mubForms = document.getElementById("mubForms");
+const khabForms = document.getElementById("khabForms");
 
-// ==================== البدء ====================
-startBtn.addEventListener("click", startGame);
-nextBtn.addEventListener("click", nextQuestion);
+// ==================== بدء التشغيل ====================
+window.addEventListener("DOMContentLoaded", startApp);
 
-function startGame() {
-  score = 0;
-  currentQuestionIndex = 0;
-  intro.classList.add("hidden");
-  questionArea.classList.remove("hidden");
-  resultArea.classList.add("hidden");
-  showQuestion();
+function startApp() {
+  if (!Array.isArray(bank100Inna) || bank100Inna.length === 0) {
+    sentenceBox.textContent = "⚠️ لا توجد جمل متاحة في البنك.";
+    return;
+  }
+  qtotal.textContent = bank100Inna.length;
+  loadQuestion();
 }
 
-// ==================== عرض السؤال ====================
-function showQuestion() {
-  feedback.classList.add("hidden");
-  nextBtn.classList.add("hidden");
-  currentStep = 1;
-
+// ==================== تحميل السؤال ====================
+function loadQuestion() {
   currentQuestion = bank100Inna[currentQuestionIndex];
-  document.getElementById("sentence").textContent = currentQuestion.sentence;
+  qnum.textContent = currentQuestionIndex + 1;
+  feedback.style.display = "none";
+  nextBtn.disabled = true;
+  checkBtn.disabled = false;
 
-  showStep1();
+  sentenceBox.textContent = currentQuestion.sentence;
+
+  renderVerbChoices();
+  mubForms.innerHTML = "";
+  khabForms.innerHTML = "";
+  selectedSubject = selectedPredicate = selectedParticle = "";
+  selectedInnaName = selectedInnaPredicate = "";
 }
 
-// =========== الخطوة 1: المبتدأ ===========
-function showStep1() {
-  showStep("step1");
-  renderChoices("choices-subject", currentQuestion.subjectChoices, (choice) => {
-    selectedSubject = choice;
-    showStep2();
+// ==================== عرض الأداة الناسخة ====================
+function renderVerbChoices() {
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.classList.remove("active");
+    chip.onclick = () => {
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      selectedParticle = chip.dataset.verb;
+      renderInnaForms();
+    };
   });
 }
 
-// =========== الخطوة 2: الخبر ===========
-function showStep2() {
-  showStep("step2");
-  renderChoices("choices-predicate", currentQuestion.predicateChoices, (choice) => {
-    selectedPredicate = choice;
-    showStep3();
+// ==================== عرض صيغ اسم وخبر إن ====================
+function renderInnaForms() {
+  const nameChoices = currentQuestion.innaNameChoices || [];
+  const predChoices = currentQuestion.innaPredicateChoices || [];
+
+  mubForms.innerHTML = nameChoices.map(
+    c => `<div class="form-chip" data-val="${c}">${c}</div>`
+  ).join("");
+
+  khabForms.innerHTML = predChoices.map(
+    c => `<div class="form-chip" data-val="${c}">${c}</div>`
+  ).join("");
+
+  document.querySelectorAll("#mubForms .form-chip").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll("#mubForms .form-chip").forEach(b => b.classList.remove("sel"));
+      btn.classList.add("sel");
+      selectedInnaName = btn.dataset.val;
+    };
   });
-}
 
-// =========== الخطوة 3: الحرف الناسخ ===========
-function showStep3() {
-  showStep("step3");
-  renderChoices("choices-particle", currentQuestion.particleChoices, (choice) => {
-    selectedParticle = choice;
-    showStep4();
-  });
-}
-
-// =========== الخطوة 4: اسم إنَّ ===========
-function showStep4() {
-  showStep("step4");
-  renderChoices("choices-inna-name", currentQuestion.innaNameChoices, (choice) => {
-    selectedInnaName = choice;
-    showStep5();
-  });
-}
-
-// =========== الخطوة 5: خبر إنَّ ===========
-function showStep5() {
-  showStep("step5");
-  renderChoices("choices-inna-predicate", currentQuestion.innaPredicateChoices, (choice) => {
-    selectedInnaPredicate = choice;
-    checkAnswer();
-  });
-}
-
-// ==================== عرض الخطوة المحددة ====================
-function showStep(stepId) {
-  document.querySelectorAll(".step").forEach(s => s.classList.add("hidden"));
-  document.getElementById(stepId).classList.remove("hidden");
-}
-
-// ==================== عرض الخيارات ====================
-function renderChoices(containerId, choices, callback) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  choices.forEach(choice => {
-    const btn = document.createElement("div");
-    btn.className = "choice";
-    btn.textContent = choice;
-    btn.addEventListener("click", () => {
-      container.querySelectorAll(".choice").forEach(c => c.classList.remove("selected"));
-      btn.classList.add("selected");
-      callback(choice);
-    });
-    container.appendChild(btn);
+  document.querySelectorAll("#khabForms .form-chip").forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll("#khabForms .form-chip").forEach(b => b.classList.remove("sel"));
+      btn.classList.add("sel");
+      selectedInnaPredicate = btn.dataset.val;
+    };
   });
 }
 
 // ==================== التحقق من الإجابة ====================
-function checkAnswer() {
+checkBtn.addEventListener("click", () => {
+  if (!selectedParticle || !selectedInnaName || !selectedInnaPredicate) {
+    feedback.style.display = "block";
+    feedback.className = "feedback bad";
+    feedback.textContent = "يرجى اختيار جميع العناصر قبل التحقق.";
+    return;
+  }
+
   const correct =
-    selectedSubject === currentQuestion.correctSubject &&
-    selectedPredicate === currentQuestion.correctPredicate &&
     selectedParticle === currentQuestion.correctParticle &&
     selectedInnaName === currentQuestion.correctInnaName &&
     selectedInnaPredicate === currentQuestion.correctInnaPredicate;
 
-  feedback.classList.remove("hidden");
+  feedback.style.display = "block";
   if (correct) {
+    feedback.className = "feedback ok";
     feedback.innerHTML = `
-      <p style="color:green;font-weight:bold;">ممتاز! ✅</p>
-      <p><span style="color:red;">${currentQuestion.correctInnaName}</span> 
-      <span style="color:blue;">${currentQuestion.correctInnaPredicate}</span></p>`;
+      <p>أحسنت ✅</p>
+      <p><span class="name-red">${currentQuestion.correctInnaName}</span>
+      <span class="khabar-blue">${currentQuestion.correctInnaPredicate}</span></p>`;
     score++;
   } else {
-    feedback.innerHTML = `<p style="color:red;font-weight:bold;">إجابة غير صحيحة ❌</p>`;
+    feedback.className = "feedback bad";
+    feedback.textContent = "❌ إجابة غير صحيحة، حاول مرة أخرى.";
   }
 
-  nextBtn.classList.remove("hidden");
-}
+  nextBtn.disabled = false;
+  checkBtn.disabled = true;
+});
 
 // ==================== السؤال التالي ====================
-function nextQuestion() {
+nextBtn.addEventListener("click", () => {
   currentQuestionIndex++;
   if (currentQuestionIndex < bank100Inna.length) {
-    showQuestion();
+    loadQuestion();
   } else {
     endGame();
   }
-}
+});
 
-// ==================== نهاية الجولة ====================
+// ==================== نهاية اللعبة ====================
 function endGame() {
-  questionArea.classList.add("hidden");
-  resultArea.classList.remove("hidden");
-  scoreDisplay.textContent = `نتيجتك: ${score} من ${bank100Inna.length}`;
+  sentenceBox.textContent = `🏁 انتهى التدريب! نتيجتك ${score} من ${bank100Inna.length}.`;
+  feedback.style.display = "none";
+  nextBtn.disabled = true;
+  checkBtn.disabled = true;
 }
