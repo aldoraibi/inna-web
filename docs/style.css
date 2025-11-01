@@ -33,7 +33,7 @@ main {
 }
 
 h1 {
-  color: var(--brand);
+  color: #000; /* أسود بدل الأحمر */
   font-size: 2rem;
   margin-bottom: 1rem;
 }
@@ -93,24 +93,23 @@ h3 {
   font-size: 1.375rem; /* 22px */
   padding: 0.45rem 1.2rem;
   border-radius: 12px;
-  border: 1px solid #d1d5db; /* رمادي فاتح جدًا */
-  color: #000; /* أسود */
-  background: #ffffff;
+  border: none; /* بدون حدود */
+  color: #000; /* أسود فقط */
+  background: #ffffff; /* خلفية بيضاء */
   margin: 0.3rem;
   transition: all 0.2s;
   font-weight: 600;
 }
 
 .chips .chip:hover {
-  background: #f3f4f6;
-  border-color: #cbd5e1;
+  background: #f3f4f6; /* رمادي فاتح عند التمرير */
 }
 
 /* ✅ عند اختيار الحرف الناسخ */
 .chips .chip.active {
-  background: #e5e7eb;
+  background: #e5e7eb; /* رمادي خفيف عند التحديد */
   color: #000;
-  border-color: #cbd5e1;
+  border: none;
 }
 
 /* أزرار اختيار الصيغ */
