@@ -32,8 +32,9 @@ main {
   text-align: center;
 }
 
+/* العنوان الرئيسي */
 h1 {
-  color: #000; /* أسود بدل الأحمر */
+  color: #000; /* أسود */
   font-size: 2rem;
   margin-bottom: 1rem;
 }
@@ -92,24 +93,29 @@ h3 {
 .chips .chip {
   font-size: 1.375rem; /* 22px */
   padding: 0.45rem 1.2rem;
-  border-radius: 12px;
-  border: none; /* بدون حدود */
-  color: #000; /* أسود فقط */
-  background: #ffffff; /* خلفية بيضاء */
+  border: none !important; /* بدون إطار */
+  color: #000 !important; /* أسود فقط */
+  background: transparent !important; /* بدون صندوق */
   margin: 0.3rem;
-  transition: all 0.2s;
   font-weight: 600;
+  transition: transform 0.2s ease;
+  box-shadow: none !important;
 }
 
+/* تأثير خفيف عند التمرير */
 .chips .chip:hover {
-  background: #f3f4f6; /* رمادي فاتح عند التمرير */
+  transform: scale(1.07);
+  background: #f5f5f5 !important; /* رمادي فاتح جدًا */
+  color: #000 !important;
+  border: none !important;
 }
 
-/* ✅ عند اختيار الحرف الناسخ */
+/* عند التحديد */
 .chips .chip.active {
-  background: #e5e7eb; /* رمادي خفيف عند التحديد */
-  color: #000;
-  border: none;
+  background: transparent !important;
+  color: #000 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 /* أزرار اختيار الصيغ */
