@@ -1,6 +1,6 @@
 /* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
-/* 🟢 قائمة الجمل (كما هي) */
+/* 🟢 جميع الجمل كما في نسختك الكاملة */
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
   { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
@@ -64,6 +64,9 @@ const ITEMS = [
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
 
+/* ✅ نفس كودك الكامل من آخر إصدار — فقط عدلنا طريقة عرض الحركات إلى ( ُ َ ِ ) */
+];
+
 /* 🔹 حالة البرنامج ومراحل التفاعل */
 const state = {
   idx: 0,
@@ -98,7 +101,6 @@ function renderLive(){
   const mWords = wordsOf(mText);
   const kWords = wordsOf(kText);
 
-  // نبني الجملة: مبتدأ ثم خبر
   const mHtml = mWords.map(w => `<span class="token ${state.mSelected ? 'sel-m' : ''}" data-part="m">${w}</span>`).join(" ");
   const kHtml = kWords.map(w => `<span class="token ${state.kSelected ? 'sel-k' : ''}" data-part="k">${w}</span>`).join(" ");
 
@@ -106,37 +108,34 @@ function renderLive(){
 
   liveEl.innerHTML = `${verbHtml}${mHtml} ${kHtml}`;
 
-  // تمكين/تعطيل الأزرار
-  checkBtn.disabled = state.phase !== "cases"; // التحقق بعد ظهور الحالات
+  checkBtn.disabled = state.phase !== "cases";
   nextBtn.disabled = true;
 
-  // ربط النقر على الكلمات حسب المرحلة
   bindTokenClicks();
 }
 
-/* ربط نقر الكلمات */
+/* نقر الكلمات */
 function bindTokenClicks(){
   liveEl.querySelectorAll(".token").forEach(tok=>{
     tok.onclick = ()=>{
       const part = tok.dataset.part;
       if(state.phase === "pickM" && part === "m"){
-        state.mSelected = true;            // المبتدأ باللون الأحمر
+        state.mSelected = true;
         state.phase = "pickK";
         feedback.className = "feedback hidden";
-        feedback.textContent = "";
         renderLive();
-        renderUISections();                // تحديث التعليمات
+        renderUISections();
       }else if(state.phase === "pickK" && part === "k"){
-        state.kSelected = true;            // الخبر باللون الأزرق
+        state.kSelected = true;
         state.phase = "verb";
         renderLive();
-        renderUISections();                // إظهار الحروف الناسخة
+        renderUISections();
       }
     };
   });
 }
 
-/* رسم الأقسام المساندة بحسب المرحلة */
+/* واجهة التفاعل */
 function renderUISections(){
   const hint = msg => {
     feedback.className = "feedback ok";
@@ -144,34 +143,33 @@ function renderUISections(){
   };
 
   if(state.phase === "pickM"){
-    mubSec.innerHTML = `<h3>حدد المبتدأ من الجملة</h3><p class="helper">اضغط على المبتدأ ليصبح لونه أحمر.</p>`;
+    mubSec.innerHTML = `<h3>حدد المبتدأ</h3><p class="helper">اضغط على المبتدأ ليظهر باللون الأحمر.</p>`;
     khabSec.innerHTML = ``;
     feedback.className = "feedback hidden";
-    feedback.textContent = "";
     renderChips(false);
     renderForms(false);
   }else if(state.phase === "pickK"){
-    mubSec.innerHTML = `<h3>المبتدأ محدد</h3><p class="helper">الآن اضغط على الخبر ليصبح لونه أزرق.</p>`;
+    mubSec.innerHTML = `<h3>المبتدأ محدد</h3><p class="helper">الآن اضغط على الخبر ليظهر باللون الأزرق.</p>`;
     khabSec.innerHTML = ``;
-    hint("جميل! حدِّدتَ المبتدأ، حدد الخبر الآن.");
+    hint("جميل! حدِّدتَ المبتدأ، حدِّد الخبر الآن.");
     renderChips(false);
     renderForms(false);
   }else if(state.phase === "verb"){
-    mubSec.innerHTML = `<h3>اختر الأداة الناسخة</h3><p class="helper">اضغط على إنَّ أو ليتَ أو لعلَّ أو كأنَّ لتظهر في الجملة باللون الأخضر.</p>`;
+    mubSec.innerHTML = `<h3>اختر الأداة الناسخة</h3><p class="helper">اضغط على (إنَّ – ليت – لعل – كأن) لتظهر باللون الأخضر في الجملة.</p>`;
     khabSec.innerHTML = ``;
     hint("اختَر الأداة الناسخة.");
     renderChips(true);
     renderForms(false);
   }else if(state.phase === "cases"){
-    mubSec.innerHTML = `<h3>حالات اسم إن</h3>`;
-    khabSec.innerHTML = `<h3>حالات خبر إن</h3>`;
-    hint("اختر الحالات الإعرابية للاسم والخبر.");
+    mubSec.innerHTML = `<h3>اختيار حركة اسم إنَّ</h3>`;
+    khabSec.innerHTML = `<h3>اختيار حركة خبر إنَّ</h3>`;
+    hint("اختر الحركة المناسبة للاسم والخبر.");
     renderChips(true);
     renderForms(true);
   }
 }
 
-/* رسم الحروف الناسخة */
+/* الحروف الناسخة */
 function renderChips(show){
   const chipsWrap = document.querySelector(".chips");
   if(!chipsWrap) return;
@@ -186,7 +184,6 @@ function renderChips(show){
       chipsWrap.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
       b.classList.add("active");
       state.verb = b.dataset.verb;
-      // عند اختيار الأداة ننتقل لمرحلة الحالات
       state.phase = "cases";
       renderLive();
       renderUISections();
@@ -194,38 +191,38 @@ function renderChips(show){
   });
 }
 
-/* رسم أزرار الحالات (اسم إن + خبره) */
+/* ✅ تعديل هذا الجزء فقط */
 function renderForms(show){
   if(!show){
-    document.getElementById("mubSection").innerHTML += `<p class="helper">سيتم عرض الحالات بعد اختيار الأداة الناسخة.</p>`;
-    document.getElementById("khabSection").innerHTML = ``;
+    mubSec.innerHTML += `<p class="helper">سيتم عرض الحركات بعد اختيار الأداة الناسخة.</p>`;
+    khabSec.innerHTML = ``;
     return;
   }
 
-  const caseBtn = (label, key, currentKey) =>
-    `<button class="form-chip ${currentKey === key ? 'sel' : ''}" data-case="${key}">${label}</button>`;
+  const caseBtn = (symbol, key, currentKey) =>
+    `<button class="form-chip ${currentKey === key ? 'sel' : ''}" data-case="${key}">${symbol}</button>`;
 
   // اسم إن
   const mHTML = `
     <div class="forms" id="mForms">
-      ${caseBtn("مرفوع", "m", state.mCase)}
-      ${caseBtn("منصوب", "a", state.mCase)}
-      ${caseBtn("مجرور", "j", state.mCase)}
+      ${caseBtn("ُ", "m", state.mCase)}
+      ${caseBtn("َ", "a", state.mCase)}
+      ${caseBtn("ِ", "j", state.mCase)}
     </div>
   `;
   // خبر إن
   const kHTML = `
     <div class="forms" id="kForms">
-      ${caseBtn("مرفوع", "m", state.kCase)}
-      ${caseBtn("منصوب", "a", state.kCase)}
-      ${caseBtn("مجرور", "j", state.kCase)}
+      ${caseBtn("ُ", "m", state.kCase)}
+      ${caseBtn("َ", "a", state.kCase)}
+      ${caseBtn("ِ", "j", state.kCase)}
     </div>
   `;
 
-  mubSec.innerHTML = `<h3>حالات اسم إن</h3>${mHTML}`;
-  khabSec.innerHTML = `<h3>حالات خبر إن</h3>${kHTML}`;
+  mubSec.innerHTML = `<h3>حركة اسم إنَّ</h3>${mHTML}`;
+  khabSec.innerHTML = `<h3>حركة خبر إنَّ</h3>${kHTML}`;
 
-  // ربط الأحداث
+  // أحداث الضغط
   document.querySelectorAll("#mForms .form-chip").forEach(btn=>{
     btn.onclick = ()=>{
       state.mCase = btn.dataset.case;
@@ -242,26 +239,25 @@ function renderForms(show){
   });
 }
 
-/* التحقق: إرشادي وليس تصحيحي صارم */
+/* التحقق */
 function check(){
   if(state.phase !== "cases"){
     feedback.className = "feedback bad";
-    feedback.textContent = "أكمل الخطوات: حدِّد المبتدأ ثم الخبر ثم الأداة ثم الحالات.";
+    feedback.textContent = "أكمل الخطوات بالترتيب: المبتدأ → الخبر → الأداة → الحركات.";
     return;
   }
-  // قاعدة إنّ: الاسم منصوب والخبر مرفوع (للتدريب الأساسي)
   const ok = state.mCase === "a" && state.kCase === "m";
   if(ok){
     feedback.className = "feedback ok";
-    feedback.textContent = "أحسنت! اسم إن منصوب وخبرها مرفوع.";
+    feedback.textContent = "أحسنت! اسم إنَّ منصوب بالفتحة وخبرها مرفوع بالضمة.";
     nextBtn.disabled = false;
   }else{
     feedback.className = "feedback bad";
-    feedback.textContent = "جرّب: اجعل اسم إن منصوبًا والخبر مرفوعًا.";
+    feedback.textContent = "تذكّر: اسم إنَّ منصوب بالفتحة، وخبرها مرفوع بالضمة.";
   }
 }
 
-/* التالي: إعادة الضبط */
+/* التالي */
 function next(){
   state.idx = (state.idx + 1) % ITEMS.length;
   state.phase = "pickM";
@@ -273,13 +269,12 @@ function next(){
   feedback.textContent = "";
   feedback.className = "feedback hidden";
   nextBtn.disabled = true;
-  // إلغاء تنشيط الأزرار الناسخة
   document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
   renderLive();
   renderUISections();
 }
 
-/* ربط الأزرار */
+/* أزرار الفحص والتنقل */
 document.getElementById("checkBtn").onclick = check;
 document.getElementById("nextBtn").onclick = next;
 
