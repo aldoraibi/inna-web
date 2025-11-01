@@ -1,73 +1,46 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* أزرار الحروف الناسخة المعدّلة — حجم الخط 22px */
-    .chips .chip {
-      font-size: 1.375rem; /* 1.375 × 16px = 22px */
-      padding: 0.45rem 1.2rem;
-      border-radius: 12px;
-      border: 2px solid #e11d48;
-      color: #e11d48;
-      background: #fff0f4;
-      margin: 0.3rem;
-      transition: all 0.2s;
-      font-weight: 600;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="style.css" />
+    <title>إنَّ وأخواتها — تدريب تفاعلي</title>
+  </head>
+  <body>
+    <main>
+      <h1>إنَّ وأخواتها — <span style="color: black;">تدريب تفاعلي</span></h1>
+      <p>اختر الأداة الناسخة ثم حدِّد الصيغ الصحيحة لإتمام المعنى.</p>
 
-    .chips .chip:hover {
-      background: #e11d48;
-      color: white;
-    }
+      <div id="live"></div>
 
-    .chips .chip.active {
-      background: #e11d48;
-      color: white;
-    }
-  </style>
-</head>
-<body>
-  <main>
-    <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
-    <p>اختر الأداة الناسخة ثم حدد الصيغ الصحيحة لإتمام المعنى.</p>
+      <div class="chips">
+        <button class="chip" data-verb="إنَّ">إنَّ</button>
+        <button class="chip" data-verb="ليتَ">ليتَ</button>
+        <button class="chip" data-verb="لعلَّ">لعلَّ</button>
+        <button class="chip" data-verb="كأنَّ">كأنَّ</button>
+      </div>
 
-    <!-- الجملة التفاعلية -->
-    <div id="live" class="card"></div>
+      <section id="mubSection"></section>
+      <section id="khabSection"></section>
 
-    <!-- أزرار الحروف الناسخة -->
-    <div class="chips">
-      <button class="chip" data-verb="إنَّ">إنَّ</button>
-      <button class="chip" data-verb="ليتَ">ليتَ</button>
-      <button class="chip" data-verb="لعلَّ">لعلَّ</button>
-      <button class="chip" data-verb="كأنَّ">كأنَّ</button>
-    </div>
+      <div id="feedback" class="feedback hidden"></div>
 
-    <section id="mubSection"></section>
-    <section id="khabSection"></section>
+      <div class="controls">
+        <button id="checkBtn">تحقق</button>
+        <button id="nextBtn">التالي</button>
+      </div>
 
-    <div id="feedback" class="feedback hidden"></div>
-
-    <div class="controls">
-      <button id="checkBtn" disabled>تحقق</button>
-      <button id="nextBtn" disabled>التالي</button>
-    </div>
-
-    <div style="margin-top:1rem;">
-      <label>
-        <input type="checkbox" id="twoStep" checked>
+      <label style="margin-top:1rem; display:block;">
+        <input type="checkbox" id="twoStep" checked />
         اختيار تدريجي (خطوتين)
       </label>
-    </div>
 
-    <footer style="margin-top:2rem;">
-      إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
-    </footer>
-  </main>
+      <footer style="margin-top:2rem;">
+        إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
+      </footer>
+    </main>
 
-  <script src="app.js"></script>
-</body>
+    <script src="app.js"></script>
+  </body>
 </html>
