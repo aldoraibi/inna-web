@@ -1,154 +1,56 @@
-// ==================== عداد الزوار الحقيقي ====================
-const counterUrl = "https://api.countapi.xyz/hit/inna-web/visitors";
+// عداد زوار حقيقي بسيط
+const counterKey = "inna-visitors";
+let count = localStorage.getItem(counterKey) || 0;
+count++;
+localStorage.setItem(counterKey, count);
+document.getElementById("count").textContent = count;
 
-async function updateVisitorCount() {
-  try {
-    const response = await fetch(counterUrl);
-    const data = await response.json();
-    document.getElementById("visitor-count").textContent = data.value;
-  } catch {
-    document.getElementById("visitor-count").textContent = "—";
-  }
-}
-updateVisitorCount();
+const $ = s => document.querySelector(s);
+const liveEl = $("#live");
+const feedback = $("#feedback");
+const checkBtn = $("#checkBtn");
+const nextBtn = $("#nextBtn");
 
-// ==================== المتغيرات العامة ====================
-let currentQuestionIndex = 0;
-let score = 0;
-let currentQuestion = {};
-let selectedSubject = "";
-let selectedPredicate = "";
-let selectedParticle = "";
-let selectedInnaName = "";
-let selectedInnaPredicate = "";
+let idx = 0, verb = null, mPick=null, kPick=null, mCase=null, kCase=null, success=false;
 
-// ==================== عناصر الصفحة ====================
-const feedback = document.getElementById("feedback");
-const nextBtn = document.getElementById("nextBtn");
-const checkBtn = document.getElementById("checkBtn");
-const qnum = document.getElementById("qnum");
-const qtotal = document.getElementById("qtotal");
-const sentenceBox = document.getElementById("sentence");
-const mubForms = document.getElementById("mubForms");
-const khabForms = document.getElementById("khabForms");
+function render() {
+  const q = ITEMS[idx];
+  let parts = [];
 
-// ==================== بدء التشغيل ====================
-window.addEventListener("DOMContentLoaded", startApp);
-
-function startApp() {
-  if (!Array.isArray(bank100Inna) || bank100Inna.length === 0) {
-    sentenceBox.textContent = "⚠️ لا توجد جمل متاحة في البنك.";
-    return;
-  }
-  qtotal.textContent = bank100Inna.length;
-  loadQuestion();
-}
-
-// ==================== تحميل السؤال ====================
-function loadQuestion() {
-  currentQuestion = bank100Inna[currentQuestionIndex];
-  qnum.textContent = currentQuestionIndex + 1;
-  feedback.style.display = "none";
-  nextBtn.disabled = true;
-  checkBtn.disabled = false;
-
-  sentenceBox.textContent = currentQuestion.sentence;
-
-  renderVerbChoices();
-  mubForms.innerHTML = "";
-  khabForms.innerHTML = "";
-  selectedSubject = selectedPredicate = selectedParticle = "";
-  selectedInnaName = selectedInnaPredicate = "";
-}
-
-// ==================== عرض الأداة الناسخة ====================
-function renderVerbChoices() {
-  document.querySelectorAll(".chip").forEach(chip => {
-    chip.classList.remove("active");
-    chip.onclick = () => {
-      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
-      chip.classList.add("active");
-      selectedParticle = chip.dataset.verb;
-      renderInnaForms();
-    };
+  q.mub.split(" ").forEach((tok,i)=>{
+    const sel = mPick===i?"token sel-m":"token";
+    parts.push(`<span class="${sel}" data-m="${i}">${tok}</span>`);
   });
+  q.khb.split(" ").forEach((tok,i)=>{
+    const sel = kPick===i?"token sel-k":"token";
+    parts.push(`<span class="${sel}" data-k="${i}">${tok}</span>`);
+  });
+  liveEl.innerHTML = parts.join(" ");
+  liveEl.querySelectorAll("[data-m]").forEach(el=>el.onclick=()=>{mPick=+el.dataset.m;render();});
+  liveEl.querySelectorAll("[data-k]").forEach(el=>el.onclick=()=>{kPick=+el.dataset.k;render();});
 }
 
-// ==================== عرض صيغ اسم وخبر إن ====================
-function renderInnaForms() {
-  const nameChoices = currentQuestion.innaNameChoices || [];
-  const predChoices = currentQuestion.innaPredicateChoices || [];
-
-  mubForms.innerHTML = nameChoices.map(
-    c => `<div class="form-chip" data-val="${c}">${c}</div>`
-  ).join("");
-
-  khabForms.innerHTML = predChoices.map(
-    c => `<div class="form-chip" data-val="${c}">${c}</div>`
-  ).join("");
-
-  document.querySelectorAll("#mubForms .form-chip").forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll("#mubForms .form-chip").forEach(b => b.classList.remove("sel"));
-      btn.classList.add("sel");
-      selectedInnaName = btn.dataset.val;
-    };
-  });
-
-  document.querySelectorAll("#khabForms .form-chip").forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll("#khabForms .form-chip").forEach(b => b.classList.remove("sel"));
-      btn.classList.add("sel");
-      selectedInnaPredicate = btn.dataset.val;
-    };
-  });
+function check(){
+  if(mPick==null||kPick==null||!verb||!mCase||!kCase)return;
+  const ok = mCase==="a" && kCase==="n";
+  feedback.className="feedback "+(ok?"ok":"bad");
+  feedback.innerHTML = ok ? "أحسنت! ✅ اسم "+verb+" <span style='color:red'>"+ITEMS[idx].mub+"</span> وخبرها <span style='color:blue'>"+ITEMS[idx].khb+"</span>" : "تحقق من إجابتك.";
+  success=ok;
+  if(ok) setTimeout(next,2000);
 }
 
-// ==================== التحقق من الإجابة ====================
-checkBtn.addEventListener("click", () => {
-  if (!selectedParticle || !selectedInnaName || !selectedInnaPredicate) {
-    feedback.style.display = "block";
-    feedback.className = "feedback bad";
-    feedback.textContent = "يرجى اختيار جميع العناصر قبل التحقق.";
-    return;
-  }
+function next(){
+  idx=(idx+1)%ITEMS.length;
+  verb=null;mPick=kPick=mCase=kCase=null;success=false;
+  feedback.textContent="";
+  render();
+}
 
-  const correct =
-    selectedParticle === currentQuestion.correctParticle &&
-    selectedInnaName === currentQuestion.correctInnaName &&
-    selectedInnaPredicate === currentQuestion.correctInnaPredicate;
-
-  feedback.style.display = "block";
-  if (correct) {
-    feedback.className = "feedback ok";
-    feedback.innerHTML = `
-      <p>أحسنت ✅</p>
-      <p><span class="name-red">${currentQuestion.correctInnaName}</span>
-      <span class="khabar-blue">${currentQuestion.correctInnaPredicate}</span></p>`;
-    score++;
-  } else {
-    feedback.className = "feedback bad";
-    feedback.textContent = "❌ إجابة غير صحيحة، حاول مرة أخرى.";
-  }
-
-  nextBtn.disabled = false;
-  checkBtn.disabled = true;
+document.querySelectorAll(".chip[data-verb]").forEach(b=>{
+  b.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");verb=b.dataset.verb;};
 });
+checkBtn.onclick=check;
+nextBtn.onclick=next;
 
-// ==================== السؤال التالي ====================
-nextBtn.addEventListener("click", () => {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < bank100Inna.length) {
-    loadQuestion();
-  } else {
-    endGame();
-  }
-});
-
-// ==================== نهاية اللعبة ====================
-function endGame() {
-  sentenceBox.textContent = `🏁 انتهى التدريب! نتيجتك ${score} من ${bank100Inna.length}.`;
-  feedback.style.display = "none";
-  nextBtn.disabled = true;
-  checkBtn.disabled = true;
-}
+render();
