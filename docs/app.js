@@ -63,10 +63,14 @@ const ITEMS = [
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
 
-// استدعاء أول جملة تلقائيًا عند تحميل الصفحة
-let current = 0;
-if (typeof renderSentence === "function") {
-  renderSentence(ITEMS[current]);
-} else if (typeof showItem === "function") {
-  showItem(ITEMS[current]);
-}
+// بدء التطبيق فور تحميل الصفحة
+document.addEventListener("DOMContentLoaded", () => {
+  state.idx = 0;
+  state.verb = null;
+  state.mCase = null;
+  state.kCase = null;
+  state.mPick = null;
+  state.kPick = null;
+  state.success = false;
+  refresh(true); // عرض أول جملة مباشرة
+});
