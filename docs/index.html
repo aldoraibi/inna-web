@@ -7,21 +7,30 @@
   <link rel="stylesheet" href="style.css">
   <style>
     /* تكبير خط أزرار الحروف الناسخة */
-    .chips .chip {
-      font-size: 1.8rem;   /* ← حجم كبير وواضح */
-      padding: 0.5rem 1.4rem;
-      border-radius: 12px;
-      border: 2px solid #e11d48;
-      color: #e11d48;
-      background: #fff0f4;
-      margin: 0.3rem;
-      transition: all 0.2s;
-      font-weight: 600;
-    }
+    <style>
+  /* تعديل حجم الحروف الناسخة إلى 22px */
+  .chips .chip {
+    font-size: 1.375rem;   /* 1.375 × 16px = 22px بالضبط */
+    padding: 0.45rem 1.2rem;
+    border-radius: 12px;
+    border: 2px solid #e11d48;
+    color: #e11d48;
+    background: #fff0f4;
+    margin: 0.3rem;
+    transition: all 0.2s;
+    font-weight: 600;
+  }
 
-    .chips .chip:hover {
-      background: #e11d48;
-      color: white;
+  .chips .chip:hover {
+    background: #e11d48;
+    color: white;
+  }
+
+  .chips .chip.active {
+    background: #e11d48;
+    color: white;
+  }
+</style>
     }
 
     .chips .chip.active {
