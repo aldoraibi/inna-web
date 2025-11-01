@@ -9,6 +9,7 @@
   --ok: #16a34a;
   --bad: #dc2626;
   --blue: #2563eb; /* أزرق للخبر */
+  --green: #16a34a; /* أخضر للحروف الناسخة داخل الجملة */
   --dark-blue: #1e3a8a; /* أزرق غامق للعناوين */
 }
 
@@ -55,57 +56,62 @@ h3 {
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.04);
 }
 
-/* التأثير على مستوى الحرف فقط */
+/* الكلمات داخل الجملة */
 .token {
-  padding: 0.1rem;
+  padding: 0.1rem 0.3rem;
   margin: 0 0.15rem;
-  border-radius: 3px;
-  transition: color 0.2s;
+  border-radius: 5px;
+  transition: color 0.25s ease;
   cursor: pointer;
 }
 
+/* اسم إن */
 .token.sel-m {
   color: var(--brand); /* أحمر */
   font-weight: bold;
 }
 
+/* خبر إن */
 .token.sel-k {
   color: var(--blue); /* أزرق */
   font-weight: bold;
 }
 
-/* ✅ الحرف الناسخ داخل الجملة */
+/* ✅ الحروف الناسخة */
 .verb {
-  color: #000000 !important; /* أسود */
+  color: #000; /* أسود افتراضي */
   font-weight: bold;
   margin: 0 0.4rem;
   transition: color 0.2s;
 }
 
-/* ✅ أزرار الحروف الناسخة */
+/* عند إضافتها إلى الجملة (نشطة) */
+.verb.active {
+  color: var(--green); /* أخضر */
+}
+
+/* أزرار الحروف الناسخة */
+.chips {
+  margin: 1rem 0;
+}
+
 .chips .chip {
   font-size: 1.375rem; /* 22px */
   padding: 0.45rem 1.2rem;
   border-radius: 12px;
-  border: none; /* بدون إطار */
+  border: 1px solid #d1d5db;
   color: #000000; /* أسود دائمًا */
-  background: #f5f5f5; /* خلفية رمادية خفيفة */
+  background: #ffffff;
   margin: 0.3rem;
   transition: all 0.2s;
   font-weight: 600;
 }
 
 .chips .chip:hover {
-  background: #e5e7eb;
-  color: #000;
+  background: #f3f4f6;
 }
 
-.chips .chip.active {
-  background: #f9fafb;
-  color: #000000; /* أسود أيضًا */
-}
-
-/* أزرار اختيار الصيغ */
+/* أزرار الصيغ */
 .forms {
   display: flex;
   flex-wrap: wrap;
