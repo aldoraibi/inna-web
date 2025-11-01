@@ -1,177 +1,64 @@
-/* InnaWaAkhawatuha Web — تفاعل تسلسلي (يجب اختيار المبتدأ ثم الخبر أولاً) */
+/* InnaWaAkhawatuha Web — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
 const ITEMS = [
-  { mub:{m:"الوَلَدُ",a:"الوَلَدَ",j:"الوَلَدِ"}, khb:{m:"ذكيٌّ",a:"ذكيًّا",j:"ذكيٍّ"} },
-  { mub:{m:"الطالبةُ",a:"الطالبةَ",j:"الطالبةِ"}, khb:{m:"ناجحةٌ",a:"ناجحةً",j:"ناجحةٍ"} },
-  { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"عزيزٌ",a:"عزيزًا",j:"عزيزٍ"} },
-  { mub:{m:"الجوُّ",a:"الجوَّ",j:"الجوِّ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
-  { mub:{m:"المعلِّمُ",a:"المعلِّمَ",j:"المعلِّمِ"}, khb:{m:"قدوةٌ",a:"قدوةً",j:"قدوةٍ"} }
+  { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
+  { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
+  { mub:{m:"المدينةُ الكبيرةُ",a:"المدينةَ الكبيرةَ",j:"المدينةِ الكبيرةِ"}, khb:{m:"هادئةٌ وجميلةٌ",a:"هادئةً وجميلةً",j:"هادئةٍ وجميلةٍ"} },
+  { mub:{m:"الطالبُ",a:"الطالبَ",j:"الطالبِ"}, khb:{m:"مجدٌ",a:"مجدًا",j:"مجدٍ"} },
+  { mub:{m:"المعلِّمُ الصبورُ",a:"المعلِّمَ الصبورَ",j:"المعلِّمِ الصبورِ"}, khb:{m:"محبوبٌ",a:"محبوبًا",j:"محبوبٍ"} },
+  { mub:{m:"المدرسةُ النظيفةُ",a:"المدرسةَ النظيفةَ",j:"المدرسةِ النظيفةِ"}, khb:{m:"منظمةٌ ومرتبةٌ",a:"منظمةً ومرتبةً",j:"منظمةٍ ومرتبةٍ"} },
+  { mub:{m:"المعلِّمُ",a:"المعلِّمَ",j:"المعلِّمِ"}, khb:{m:"قدوةٌ",a:"قدوةً",j:"قدوةٍ"} },
+  { mub:{m:"الفتاةُ الذكيةُ",a:"الفتاةَ الذكيةَ",j:"الفتاةِ الذكيةِ"}, khb:{m:"ناجحةٌ",a:"ناجحةً",j:"ناجحةٍ"} },
+  { mub:{m:"السماءُ الزرقاءُ",a:"السماءَ الزرقاءَ",j:"السماءِ الزرقاءِ"}, khb:{m:"صافيةٌ ومشرقةٌ",a:"صافيةً ومشرقةً",j:"صافيةٍ ومشرقةٍ"} },
+  { mub:{m:"المدرسةُ",a:"المدرسةَ",j:"المدرسةِ"}, khb:{m:"نظيفةٌ",a:"نظيفةً",j:"نظيفةٍ"} },
+  { mub:{m:"الولدُ النشيطُ",a:"الولدَ النشيطَ",j:"الولدِ النشيطِ"}, khb:{m:"مبدعٌ",a:"مبدعًا",j:"مبدعٍ"} },
+  { mub:{m:"الحديقةُ الواسعةُ",a:"الحديقةَ الواسعةَ",j:"الحديقةِ الواسعةِ"}, khb:{m:"مليئةٌ بالزهورِ",a:"مليئةً بالزهورِ",j:"مليئةٍ بالزهورِ"} },
+  { mub:{m:"الوقتُ",a:"الوقتَ",j:"الوقتِ"}, khb:{m:"ثمینٌ",a:"ثمینًا",j:"ثمینٍ"} },
+  { mub:{m:"الحديقةُ الكبيرةُ",a:"الحديقةَ الكبيرةَ",j:"الحديقةِ الكبيرةِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
+  { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"محبوبٌ في صفِّهِ",a:"محبوبًا في صفِّهِ",j:"محبوبٍ في صفِّهِ"} },
+  { mub:{m:"الصدقُ",a:"الصدقَ",j:"الصدقِ"}, khb:{m:"فضيلةٌ",a:"فضيلةً",j:"فضيلةٍ"} },
+  { mub:{m:"المملكةُ العربيةُ",a:"المملكةَ العربيةَ",j:"المملكةِ العربيةِ"}, khb:{m:"عظيمةٌ",a:"عظيمةً",j:"عظيمةٍ"} },
+  { mub:{m:"المعلمةُ الفاضلةُ",a:"المعلمةَ الفاضلةَ",j:"المعلمةِ الفاضلةِ"}, khb:{m:"قدوةٌ لطالباتِها",a:"قدوةً لطالباتِها",j:"قدوةٍ لطالباتِها"} },
+  { mub:{m:"العلمُ",a:"العلمَ",j:"العلمِ"}, khb:{m:"نورٌ",a:"نورًا",j:"نورٍ"} },
+  { mub:{m:"السماءُ الزرقاءُ",a:"السماءَ الزرقاءَ",j:"السماءِ الزرقاءِ"}, khb:{m:"رائعةٌ",a:"رائعةً",j:"رائعةٍ"} },
+  { mub:{m:"المعلِّمُ المخلصُ",a:"المعلِّمَ المخلصَ",j:"المعلِّمِ المخلصِ"}, khb:{m:"محبوبٌ بين طلابِهِ",a:"محبوبًا بين طلابِهِ",j:"محبوبٍ بين طلابِهِ"} },
+  { mub:{m:"الأمانةُ",a:"الأمانةَ",j:"الأمانةِ"}, khb:{m:"خلقٌ",a:"خلقًا",j:"خلقٍ"} },
+  { mub:{m:"الطالبُ المؤدبُ",a:"الطالبَ المؤدبَ",j:"الطالبِ المؤدبِ"}, khb:{m:"محترمٌ",a:"محترمًا",j:"محترمٍ"} },
+  { mub:{m:"المملكةُ العربيةُ السعوديةُ",a:"المملكةَ العربيةَ السعوديةَ",j:"المملكةِ العربيةِ السعوديةِ"}, khb:{m:"شامخةٌ بالعطاءِ",a:"شامخةً بالعطاءِ",j:"شامخةٍ بالعطاءِ"} },
+  { mub:{m:"السماءُ",a:"السماءَ",j:"السماءِ"}, khb:{m:"صافيةٌ",a:"صافيةً",j:"صافيةٍ"} },
+  { mub:{m:"المعلِّمُ الخبيرُ",a:"المعلِّمَ الخبيرَ",j:"المعلِّمِ الخبيرِ"}, khb:{m:"ناجحٌ",a:"ناجحًا",j:"ناجحٍ"} },
+  { mub:{m:"البحرُ الهادئُ",a:"البحرَ الهادئَ",j:"البحرِ الهادئِ"}, khb:{m:"جميلٌ في المساءِ",a:"جميلًا في المساءِ",j:"جميلٍ في المساءِ"} },
+  { mub:{m:"الكتابُ",a:"الكتابَ",j:"الكتابِ"}, khb:{m:"مفيدٌ",a:"مفيدًا",j:"مفيدٍ"} },
+  { mub:{m:"البيتُ الجميلُ",a:"البيتَ الجميلَ",j:"البيتِ الجميلِ"}, khb:{m:"واسعٌ",a:"واسعًا",j:"واسعٍ"} },
+  { mub:{m:"القمرُ المنيرُ",a:"القمرَ المنيرَ",j:"القمرِ المنيرِ"}, khb:{m:"يضيءُ سماءَ الليلِ",a:"يضيءَ سماءَ الليلِ",j:"يضيءِ سماءَ الليلِ"} },
+  { mub:{m:"البيتُ",a:"البيتَ",j:"البيتِ"}, khb:{m:"واسعٌ",a:"واسعًا",j:"واسعٍ"} },
+  { mub:{m:"الحديقةُ النظيفةُ",a:"الحديقةَ النظيفةَ",j:"الحديقةِ النظيفةِ"}, khb:{m:"منظمةٌ",a:"منظمةً",j:"منظمةٍ"} },
+  { mub:{m:"الطفلُ اللطيفُ",a:"الطفلَ اللطيفَ",j:"الطفلِ اللطيفِ"}, khb:{m:"يبتسمُ للجميعِ",a:"يبتسمَ للجميعِ",j:"يبتسمِ للجميعِ"} },
+  { mub:{m:"الزهرةُ",a:"الزهرةَ",j:"الزهرةِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
+  { mub:{m:"الطفلُ الصغيرُ",a:"الطفلَ الصغيرَ",j:"الطفلِ الصغيرِ"}, khb:{m:"لطيفٌ",a:"لطيفًا",j:"لطيفٍ"} },
+  { mub:{m:"الطالبُ المؤدبُ",a:"الطالبَ المؤدبَ",j:"الطالبِ المؤدبِ"}, khb:{m:"يحترمُ معلمَهُ",a:"يحترمَ معلمَهُ",j:"يحترمِ معلمَهُ"} },
+  { mub:{m:"الجيشُ",a:"الجيشَ",j:"الجيشِ"}, khb:{m:"قويٌّ",a:"قويًّا",j:"قويٍّ"} },
+  { mub:{m:"الوردةُ الحمراءُ",a:"الوردةَ الحمراءَ",j:"الوردةِ الحمراءِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
+  { mub:{m:"الحديقةُ المزهرةُ",a:"الحديقةَ المزهرةَ",j:"الحديقةِ المزهرةِ"}, khb:{m:"تبعثُ السرورَ",a:"تبعثَ السرورَ",j:"تبعثِ السرورَ"} },
+  { mub:{m:"المطرُ",a:"المطرَ",j:"المطرِ"}, khb:{m:"نافعٌ",a:"نافعًا",j:"نافعٍ"} },
+  { mub:{m:"المدرسةُ النموذجيةُ",a:"المدرسةَ النموذجيةَ",j:"المدرسةِ النموذجيةِ"}, khb:{m:"مرتبةٌ",a:"مرتبةً",j:"مرتبةٍ"} },
+  { mub:{m:"الوردةُ البيضاءُ",a:"الوردةَ البيضاءَ",j:"الوردةِ البيضاءِ"}, khb:{m:"تفوحُ بالعطرِ",a:"تفوحَ بالعطرِ",j:"تفوحِ بالعطرِ"} },
+  { mub:{m:"البحرُ",a:"البحرَ",j:"البحرِ"}, khb:{m:"عميقٌ",a:"عميقًا",j:"عميقٍ"} },
+  { mub:{m:"المملكةُ الغاليةُ",a:"المملكةَ الغاليةَ",j:"المملكةِ الغاليةِ"}, khb:{m:"آمنةٌ",a:"آمنةً",j:"آمنةٍ"} },
+  { mub:{m:"الوطنُ الغاليُّ",a:"الوطنَ الغاليَ",j:"الوطنِ الغاليِ"}, khb:{m:"مزدهرٌ بالعقولِ",a:"مزدهرًا بالعقولِ",j:"مزدهرٍ بالعقولِ"} },
+  { mub:{m:"التمرُ",a:"التمرَ",j:"التمرِ"}, khb:{m:"لذيذٌ",a:"لذيذًا",j:"لذيذٍ"} },
+  { mub:{m:"الموظفُ النشيطُ",a:"الموظفَ النشيطَ",j:"الموظفِ النشيطِ"}, khb:{m:"متميزٌ",a:"متميزًا",j:"متميزٍ"} },
+  { mub:{m:"الطالبةُ المبدعةُ",a:"الطالبةَ المبدعةَ",j:"الطالبةِ المبدعةِ"}, khb:{m:"تنالُ الجائزةَ",a:"تنالَ الجائزةَ",j:"تنالِ الجائزةِ"} },
+  { mub:{m:"الشمسُ",a:"الشمسَ",j:"الشمسِ"}, khb:{m:"مشرقةٌ",a:"مشرقةً",j:"مشرقةٍ"} },
+  { mub:{m:"العلمُ النافعُ",a:"العلمَ النافعَ",j:"العلمِ النافعِ"}, khb:{m:"سلاحٌ",a:"سلاحًا",j:"سلاحٍ"} },
+  { mub:{m:"المعلمُ الصبورُ",a:"المعلمَ الصبورَ",j:"المعلمِ الصبورِ"}, khb:{m:"يزرعُ الأملَ",a:"يزرعَ الأملَ",j:"يزرعِ الأملَ"} },
+  { mub:{m:"القمرُ",a:"القمرَ",j:"القمرِ"}, khb:{m:"منيرٌ",a:"منيرًا",j:"منيرٍ"} },
+  { mub:{m:"الطالبُ المثابرُ",a:"الطالبَ المثابرَ",j:"الطالبِ المثابرِ"}, khb:{m:"محبوبٌ",a:"محبوبًا",j:"محبوبٍ"} },
+  { mub:{m:"الفتاةُ المجتهدةُ",a:"الفتاةَ المجتهدةَ",j:"الفتاةِ المجتهدةِ"}, khb:{m:"تحققُ النجاحَ",a:"تحققَ النجاحَ",j:"تحققِ النجاحَ"} },
+  { mub:{m:"الهواءُ",a:"الهواءَ",j:"الهواءِ"}, khb:{m:"نقيٌّ",a:"نقيًّا",j:"نقيٍّ"} },
+  { mub:{m:"الفجرُ الصادقُ",a:"الفجرَ الصادقَ",j:"الفجرِ الصادقِ"}, khb:{m:"مشرقٌ",a:"مشرقًا",j:"مشرقٍ"} },
+  { mub:{m:"المدينةُ الهادئةُ",a:"المدينةَ الهادئةَ",j:"المدينةِ الهادئةِ"}, khb:{m:"نظيفةٌ وجميلةٌ",a:"نظيفةً وجميلةً",j:"نظيفةٍ وجميلةٍ"} },
+  { mub:{m:"الوردةُ",a:"الوردةَ",j:"الوردةِ"}, khb:{m:"عطرةٌ",a:"عطرةً",j:"عطرةٍ"} },
+  { mub:{m:"الطريقُ الطويلُ",a:"الطريقَ الطويلَ",j:"الطريقِ الطويلِ"}, khb:{m:"ممهدٌ",a:"ممهدًا",j:"ممهدٍ"} },
+  { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
-
-const state = {
-  idx: 0, verb: null, twoStep: true,
-  mCase: null, kCase: null,
-  mPick: null, kPick: null,
-  mPicked:false, kPicked:false,
-  success:false
-};
-
-const $ = s => document.querySelector(s);
-const liveEl = $("#live");
-const mubSec = $("#mubSection");
-const khabSec = $("#khabSection");
-const feedback = $("#feedback");
-const checkBtn = $("#checkBtn");
-const nextBtn = $("#nextBtn");
-const twoStep = $("#twoStep");
-const chipsContainer = document.querySelector(".chips");
-chipsContainer.style.display = "none"; // مخفية بالبداية
-
-function splitTokens(text){ return text.trim().split(/\s+/); }
-function current(){ return ITEMS[state.idx]; }
-
-function conj(v){ return v; }
-function form(forms,c){ return forms[c ?? "m"]; }
-
-function tokenForm(forms, idx){
-  const mT = splitTokens(forms.m), aT = splitTokens(forms.a), jT = splitTokens(forms.j);
-  const i = Math.min(idx ?? 0, Math.max(mT.length,1)-1);
-  return { m: mT[i] ?? forms.m, a: aT[i] ?? forms.a, j: jT[i] ?? forms.j };
-}
-
-function renderLive(){
-  const M = current().mub, K = current().khb;
-  const mText = form(M, state.mCase ?? "m");
-  const kText = form(K, state.kCase ?? "m");
-  const mTokens = splitTokens(mText), kTokens = splitTokens(kText);
-
-  const parts = [];
-  if(state.verb){
-    parts.push(`<span class="verb">${state.verb}</span>`);
-  }
-
-  mTokens.forEach((tok,i)=>{
-    const sel = state.mPick===i ? " token sel-m" : " token";
-    parts.push(`<span class="${sel}" data-m="${i}">${tok}</span>`);
-  });
-  kTokens.forEach((tok,i)=>{
-    const sel = state.kPick===i ? " token sel-k" : " token";
-    parts.push(`<span class="${sel}" data-k="${i}">${tok}</span>`);
-  });
-  liveEl.innerHTML = parts.join(" ");
-
-  // التفاعل مع المبتدأ والخبر
-  liveEl.querySelectorAll("[data-m]").forEach(el=> el.onclick = ()=>{
-    state.mPick=+el.dataset.m;
-    state.mPicked=true;
-    refresh();
-  });
-  liveEl.querySelectorAll("[data-k]").forEach(el=> el.onclick = ()=>{
-    state.kPick=+el.dataset.k;
-    state.kPicked=true;
-    refresh();
-  });
-
-  // ✅ لا تظهر الحروف الناسخة إلا بعد اختيار المبتدأ والخبر
-  chipsContainer.style.display = (state.mPicked && state.kPicked) ? "block" : "none";
-
-  checkBtn.disabled = !isAnswerComplete();
-  nextBtn.disabled  = !state.success;
-}
-
-function selectedMTokenForms(){
-  const idx = state.mPick ?? 0; return tokenForm(current().mub, idx);
-}
-function selectedKTokenForms(){
-  const idx = state.kPick ?? 0; return tokenForm(current().khb, idx);
-}
-
-function renderForms(){
-  mubSec.innerHTML = ""; khabSec.innerHTML = "";
-
-  if(!state.mPicked || !state.kPicked){
-    mubSec.innerHTML = `<div class="helper">اختر أولاً المبتدأ ثم الخبر من الجملة أعلاه.</div>`;
-    return;
-  }
-
-  if(!state.verb){
-    mubSec.innerHTML = `<div class="helper">الآن اختر أحد الحروف الناسخة.</div>`;
-    return;
-  }
-
-  mubSec.innerHTML = renderFormsBlock("اختر صيغة اسم إنَّ الصحيحة", selectedMTokenForms(), "mCase");
-  khabSec.innerHTML = renderFormsBlock("اختر صيغة خبر إنَّ الصحيحة", selectedKTokenForms(), "kCase");
-
-  mubSec.querySelectorAll("[data-case]").forEach(btn=> btn.onclick=()=>{ state.mCase=btn.dataset.case; refresh(); });
-  khabSec.querySelectorAll("[data-case]").forEach(btn=> btn.onclick=()=>{ state.kCase=btn.dataset.case; refresh(); });
-}
-
-function renderFormsBlock(title, forms, bindKey){
-  const sel = (bindKey==="mCase"?state.mCase:state.kCase);
-  const chip = (label,code)=>`<button class="form-chip ${sel===code?'sel':''}" data-case="${code}">${label}</button>`;
-  return `
-    <h3>${title}</h3>
-    <div class="forms">
-      ${chip(forms.m,"m")}
-      ${chip(forms.a,"a")}
-      ${chip(forms.j,"j")}
-    </div>
-  `;
-}
-
-function isAnswerComplete(){
-  return state.mPicked && state.kPicked && state.verb && state.mCase && state.kCase;
-}
-
-function check(){
-  if(!isAnswerComplete()) return;
-  const okM = state.mCase==="a";
-  const okK = state.kCase==="m";
-
-  if(okM && okK){
-    feedback.className = "feedback ok";
-    feedback.innerHTML = `أحسنت ✅ بعد (${state.verb}): <span style="color:red">اسمها منصوب</span> و<span style="color:blue">خبرها مرفوع</span>.`;
-    state.success = true;
-  }else{
-    feedback.className = "feedback bad";
-    feedback.textContent = "تذكّر: اسم إن منصوب، وخبرها مرفوع.";
-    state.success = false;
-  }
-  checkBtn.disabled = !isAnswerComplete();
-  nextBtn.disabled  = !state.success;
-}
-
-function next(){
-  if(!state.success) return;
-  state.idx = (state.idx+1) % ITEMS.length;
-  Object.assign(state, {
-    verb:null, mCase:null, kCase:null,
-    mPick:null, kPick:null,
-    mPicked:false, kPicked:false,
-    success:false
-  });
-  refresh(true);
-}
-
-// أزرار الحروف الناسخة
-document.querySelectorAll(".chip[data-verb]").forEach(b=>{
-  b.onclick = ()=>{
-    if(!state.mPicked || !state.kPicked) return; // لا يُسمح قبل اختيار المبتدأ والخبر
-    document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    state.verb = b.dataset.verb;
-    refresh();
-  };
-});
-
-twoStep.onchange = ()=>{ state.twoStep = twoStep.checked; refresh(); };
-checkBtn.onclick = check;
-nextBtn.onclick = next;
-
-function refresh(resetFeedback){
-  renderLive();
-  renderForms();
-  if(resetFeedback){ feedback.className="feedback hidden"; feedback.textContent=""; }
-}
-
-refresh(true);
