@@ -1,20 +1,55 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="manifest" href="./manifest.json" />
-    <title>InnaWaAkhawatuha — إنَّ وأخواتها</title>
-  </head>
-  <body>
-    <main style="font-family: system-ui; margin: 2rem; text-align:center;">
-      <h1>تطبيق إنَّ وأخواتها</h1>
-      <p>تعلَّم إنَّ وأخواتها بطريقة تفاعلية ممتعة.</p>
-      <p>يعمل الموقع أوفلاين بعد أول زيارة.</p>
-      <footer style="margin-top:2rem; font-size:1rem; color:#555;">
-        إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
-      </footer>
-    </main>
-    <script src="./register-sw.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
+    <p>اختر الأدوات والصيغ الصحيحة لإتمام المعنى.</p>
+
+    <!-- منطقة الجملة -->
+    <div id="live" class="card"></div>
+
+    <!-- اختيار نوع الأداة -->
+    <div class="chips">
+      <button class="chip" data-verb="إنَّ">إنَّ</button>
+      <button class="chip" data-verb="أنَّ">أنَّ</button>
+      <button class="chip" data-verb="كأنَّ">كأنَّ</button>
+      <button class="chip" data-verb="لكنَّ">لكنَّ</button>
+      <button class="chip" data-verb="ليتَ">ليتَ</button>
+      <button class="chip" data-verb="لعلَّ">لعلَّ</button>
+    </div>
+
+    <!-- أقسام التمارين -->
+    <section id="mubSection"></section>
+    <section id="khabSection"></section>
+
+    <!-- التغذية الراجعة -->
+    <div id="feedback" class="feedback hidden"></div>
+
+    <!-- أزرار التحكم -->
+    <div class="controls">
+      <button id="checkBtn" disabled>تحقق</button>
+      <button id="nextBtn" disabled>التالي</button>
+    </div>
+
+    <!-- خيار التمرين -->
+    <div style="margin-top:1rem;">
+      <label>
+        <input type="checkbox" id="twoStep" checked>
+        اختيار تدريجي (خطوتين)
+      </label>
+    </div>
+
+    <footer style="margin-top:2rem;">
+      إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
 </html>
