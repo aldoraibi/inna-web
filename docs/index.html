@@ -6,31 +6,22 @@
   <title>إنَّ وأخواتها — تدريب تفاعلي</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* تكبير خط أزرار الحروف الناسخة */
-    <style>
-  /* تعديل حجم الحروف الناسخة إلى 22px */
-  .chips .chip {
-    font-size: 1.375rem;   /* 1.375 × 16px = 22px بالضبط */
-    padding: 0.45rem 1.2rem;
-    border-radius: 12px;
-    border: 2px solid #e11d48;
-    color: #e11d48;
-    background: #fff0f4;
-    margin: 0.3rem;
-    transition: all 0.2s;
-    font-weight: 600;
-  }
+    /* أزرار الحروف الناسخة المعدّلة — حجم الخط 22px */
+    .chips .chip {
+      font-size: 1.375rem; /* 1.375 × 16px = 22px */
+      padding: 0.45rem 1.2rem;
+      border-radius: 12px;
+      border: 2px solid #e11d48;
+      color: #e11d48;
+      background: #fff0f4;
+      margin: 0.3rem;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
 
-  .chips .chip:hover {
-    background: #e11d48;
-    color: white;
-  }
-
-  .chips .chip.active {
-    background: #e11d48;
-    color: white;
-  }
-</style>
+    .chips .chip:hover {
+      background: #e11d48;
+      color: white;
     }
 
     .chips .chip.active {
@@ -44,10 +35,10 @@
     <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
     <p>اختر الأداة الناسخة ثم حدد الصيغ الصحيحة لإتمام المعنى.</p>
 
-    <!-- منطقة الجملة -->
+    <!-- الجملة التفاعلية -->
     <div id="live" class="card"></div>
 
-    <!-- أزرار الحروف الناسخة (فقط الأربعة المطلوبة) -->
+    <!-- أزرار الحروف الناسخة -->
     <div class="chips">
       <button class="chip" data-verb="إنَّ">إنَّ</button>
       <button class="chip" data-verb="ليتَ">ليتَ</button>
@@ -55,20 +46,16 @@
       <button class="chip" data-verb="كأنَّ">كأنَّ</button>
     </div>
 
-    <!-- أقسام التمارين -->
     <section id="mubSection"></section>
     <section id="khabSection"></section>
 
-    <!-- التغذية الراجعة -->
     <div id="feedback" class="feedback hidden"></div>
 
-    <!-- أزرار التحكم -->
     <div class="controls">
       <button id="checkBtn" disabled>تحقق</button>
       <button id="nextBtn" disabled>التالي</button>
     </div>
 
-    <!-- خيار التمرين -->
     <div style="margin-top:1rem;">
       <label>
         <input type="checkbox" id="twoStep" checked>
