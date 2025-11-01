@@ -8,6 +8,7 @@
   --brand: #e11d48; /* اسم إن */
   --ok: #16a34a; /* لون الحروف الناسخة في الجملة */
   --blue: #2563eb; /* خبر إن */
+  --light-blue: #e0f2fe; /* خلفية الجملة التفاعلية */
   --dark-blue: #1e3a8a; /* العناوين */
 }
 
@@ -45,7 +46,7 @@ h3 {
 
 /* الجملة التفاعلية */
 #live {
-  background: #fffafc;
+  background: var(--light-blue); /* أزرق فاتح */
   border-radius: 14px;
   padding: 1rem;
   font-size: 2rem;
@@ -77,13 +78,13 @@ h3 {
 
 /* ✅ الحروف الناسخة داخل الجملة */
 .verb {
-  color: var(--ok); /* أخضر عندما تضاف إلى الجملة */
+  color: var(--ok); /* أخضر عند الإضافة */
   font-weight: bold;
   margin: 0 0.4rem;
   transition: color 0.2s ease-in-out;
 }
 
-/* ✅ الأزرار الخاصة بالحروف الناسخة */
+/* ✅ أزرار الحروف الناسخة */
 .chips {
   margin: 1rem 0;
 }
@@ -92,8 +93,8 @@ h3 {
   font-size: 1.375rem; /* 22px */
   padding: 0.45rem 1.2rem;
   border-radius: 12px;
-  border: 1px solid #d1d5db;
-  color: #000; /* أسود افتراضي */
+  border: 1px solid #d1d5db; /* رمادي فاتح جدًا */
+  color: #000; /* أسود */
   background: #ffffff;
   margin: 0.3rem;
   transition: all 0.2s;
@@ -102,6 +103,7 @@ h3 {
 
 .chips .chip:hover {
   background: #f3f4f6;
+  border-color: #cbd5e1;
 }
 
 /* ✅ عند اختيار الحرف الناسخ */
