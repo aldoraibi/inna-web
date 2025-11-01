@@ -1,109 +1,93 @@
-:root {
-  --bg: #f5f7fb;
-  --card: #fff;
-  --txt: #0f172a;
-  --muted: #6b7280;
-  --brand: #2563eb;
-  --ok: #16a34a;
-  --bad: #dc2626;
-}
-
 body {
   background: linear-gradient(135deg, #e0ecff, #f5f7fb);
   font-family: "Noto Naskh Arabic", "Arial", sans-serif;
   margin: 0;
   padding: 0;
   direction: rtl;
-  color: var(--txt);
+  color: #0f172a;
 }
 
 .card {
-  max-width: 720px;
+  max-width: 750px;
   margin: 40px auto;
-  background: var(--card);
+  background: white;
   padding: 24px;
   border-radius: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
 h1 {
   font-size: 26px;
-  text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-#live {
+.sentence {
   font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-  margin: 12px 0;
+  margin-bottom: 20px;
 }
 
-.token {
-  padding: 4px 10px;
-  border-radius: 8px;
-  margin: 2px;
-  cursor: pointer;
-}
-
-.sel-m { background: #fee2e2; color: #b91c1c; }
-.sel-k { background: #dbeafe; color: #1e40af; }
-
-.verbs {
+.verb-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
   justify-content: center;
-  margin-top: 16px;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
-.chip {
-  padding: 8px 14px;
+.verb {
+  font-size: 22px;
+  padding: 8px 16px;
+  border-radius: 12px;
   border: none;
-  background: #e5e7eb;
-  border-radius: 10px;
   cursor: pointer;
-  font-size: 18px;
+  background: #e5e7eb;
 }
 
-.chip.active {
-  background: var(--brand);
+.verb.active {
+  background: #2563eb;
   color: white;
 }
 
-.forms button {
-  font-size: 20px;
-  padding: 6px 14px;
-  margin: 4px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-.controls {
+.choices {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
-  margin-top: 16px;
+  margin-bottom: 20px;
 }
 
-.controls button {
-  font-size: 20px;
+.choice {
+  background: #f3f4f6;
+  border: 1px solid #cbd5e1;
   padding: 8px 16px;
-  border-radius: 12px;
+  border-radius: 10px;
+  font-size: 22px;
   cursor: pointer;
 }
 
-.feedback {
-  margin-top: 14px;
-  text-align: center;
+.choice.correct { background: #16a34a; color: white; }
+.choice.wrong { background: #dc2626; color: white; }
+
+.controls button {
   font-size: 20px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  margin: 5px;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+}
+
+.feedback {
+  font-size: 20px;
+  margin-top: 14px;
+  min-height: 28px;
 }
 
 footer {
-  text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
   font-size: 16px;
-  color: var(--muted);
+  color: #6b7280;
 }
-
-#visitorCount { margin-bottom: 6px; }
