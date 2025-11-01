@@ -1,42 +1,20 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <main class="card">
-    <h1>تعلم إنَّ وأخواتها بطريقة تفاعلية ممتعة</h1>
-
-    <div id="sentence" class="sentence"></div>
-
-    <div class="verb-buttons">
-      <button class="verb">إنَّ</button>
-      <button class="verb">أنَّ</button>
-      <button class="verb">كأنَّ</button>
-      <button class="verb">لكنَّ</button>
-      <button class="verb">ليتَ</button>
-      <button class="verb">لعلَّ</button>
-    </div>
-
-    <div id="choices" class="choices"></div>
-
-    <div class="controls">
-      <button id="check">تحقق</button>
-      <button id="next">التالي</button>
-    </div>
-
-    <div id="feedback" class="feedback"></div>
-
-    <footer>
-      <div id="visitorCount">عدد الزوار: <span id="count">0</span></div>
-      <p>إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي</p>
-    </footer>
-  </main>
-
-  <script src="bank.js"></script>
-  <script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>InnaWaAkhawatuha — إنَّ وأخواتها</title>
+  </head>
+  <body>
+    <main style="font-family: system-ui; margin: 2rem; text-align:center;">
+      <h1>تطبيق إنَّ وأخواتها</h1>
+      <p>تعلَّم إنَّ وأخواتها بطريقة تفاعلية ممتعة.</p>
+      <p>يعمل الموقع أوفلاين بعد أول زيارة.</p>
+      <footer style="margin-top:2rem; font-size:1rem; color:#555;">
+        إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي
+      </footer>
+    </main>
+    <script src="./register-sw.js"></script>
+  </body>
 </html>
