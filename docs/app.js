@@ -1,56 +1,77 @@
-// عداد زوار حقيقي بسيط
-const counterKey = "inna-visitors";
-let count = localStorage.getItem(counterKey) || 0;
+// عداد الزوار المحلي
+const key = "inna-visitors";
+let count = localStorage.getItem(key) || 0;
 count++;
-localStorage.setItem(counterKey, count);
+localStorage.setItem(key, count);
 document.getElementById("count").textContent = count;
 
-const $ = s => document.querySelector(s);
-const liveEl = $("#live");
-const feedback = $("#feedback");
-const checkBtn = $("#checkBtn");
-const nextBtn = $("#nextBtn");
+const sentenceEl = document.getElementById("sentence");
+const choicesEl = document.getElementById("choices");
+const feedback = document.getElementById("feedback");
+const verbs = document.querySelectorAll(".verb");
+const checkBtn = document.getElementById("check");
+const nextBtn = document.getElementById("next");
 
-let idx = 0, verb = null, mPick=null, kPick=null, mCase=null, kCase=null, success=false;
+let current = 0;
+let chosenVerb = null;
+let correctChoice = null;
+let selectedChoice = null;
 
-function render() {
-  const q = ITEMS[idx];
-  let parts = [];
+function renderSentence() {
+  const s = SENTENCES[current].base;
+  sentenceEl.innerHTML = s;
+  feedback.textContent = "";
+  choicesEl.innerHTML = "";
+  verbs.forEach(v => v.classList.remove("active"));
+  chosenVerb = null;
+  selectedChoice = null;
+}
 
-  q.mub.split(" ").forEach((tok,i)=>{
-    const sel = mPick===i?"token sel-m":"token";
-    parts.push(`<span class="${sel}" data-m="${i}">${tok}</span>`);
+verbs.forEach(v => {
+  v.addEventListener("click", () => {
+    verbs.forEach(btn => btn.classList.remove("active"));
+    v.classList.add("active");
+    chosenVerb = v.textContent;
+    buildChoices();
   });
-  q.khb.split(" ").forEach((tok,i)=>{
-    const sel = kPick===i?"token sel-k":"token";
-    parts.push(`<span class="${sel}" data-k="${i}">${tok}</span>`);
-  });
-  liveEl.innerHTML = parts.join(" ");
-  liveEl.querySelectorAll("[data-m]").forEach(el=>el.onclick=()=>{mPick=+el.dataset.m;render();});
-  liveEl.querySelectorAll("[data-k]").forEach(el=>el.onclick=()=>{kPick=+el.dataset.k;render();});
-}
-
-function check(){
-  if(mPick==null||kPick==null||!verb||!mCase||!kCase)return;
-  const ok = mCase==="a" && kCase==="n";
-  feedback.className="feedback "+(ok?"ok":"bad");
-  feedback.innerHTML = ok ? "أحسنت! ✅ اسم "+verb+" <span style='color:red'>"+ITEMS[idx].mub+"</span> وخبرها <span style='color:blue'>"+ITEMS[idx].khb+"</span>" : "تحقق من إجابتك.";
-  success=ok;
-  if(ok) setTimeout(next,2000);
-}
-
-function next(){
-  idx=(idx+1)%ITEMS.length;
-  verb=null;mPick=kPick=mCase=kCase=null;success=false;
-  feedback.textContent="";
-  render();
-}
-
-document.querySelectorAll(".chip[data-verb]").forEach(b=>{
-  b.onclick=()=>{document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");verb=b.dataset.verb;};
 });
-checkBtn.onclick=check;
-nextBtn.onclick=next;
 
-render();
+function buildChoices() {
+  const s = SENTENCES[current].base.split(" ");
+  const mub = s[0].replace("ُ", "َ");
+  const khb = s[1];
+  const correct = `${chosenVerb} ${mub} ${khb}`;
+  const wrong1 = `${chosenVerb} ${s[0]} ${khb}`;
+  const wrong2 = `${chosenVerb} ${mub} ${khb.replace("ٌ", "ًا")}`;
+  const arr = [correct, wrong1, wrong2].sort(() => Math.random() - 0.5);
+  correctChoice = correct;
+  choicesEl.innerHTML = "";
+  arr.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.textContent = c;
+    b.onclick = () => {
+      document.querySelectorAll(".choice").forEach(x => x.classList.remove("selected"));
+      b.classList.add("selected");
+      selectedChoice = c;
+    };
+    choicesEl.appendChild(b);
+  });
+}
+
+checkBtn.onclick = () => {
+  if (!selectedChoice) return;
+  document.querySelectorAll(".choice").forEach(x => x.disabled = true);
+  if (selectedChoice === correctChoice) {
+    feedback.innerHTML = `أحسنت! ✅ <span style="color:red">اسم ${chosenVerb}</span> منصوب و<span style="color:blue">خبرها مرفوع</span>`;
+  } else {
+    feedback.innerHTML = "تحقق من إجابتك ❌";
+  }
+};
+
+nextBtn.onclick = () => {
+  current = (current + 1) % SENTENCES.length;
+  renderSentence();
+};
+
+renderSentence();
