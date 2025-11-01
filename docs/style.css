@@ -5,7 +5,7 @@
   --card: #ffffff;
   --txt: #0f172a;
   --muted: #6b7280;
-  --brand: #e11d48; /* اللون الرئيسي (أحمر وردي يناسب إنَّ) */
+  --brand: #e11d48;
   --ok: #16a34a;
   --bad: #dc2626;
   --blue: #2563eb;
@@ -43,12 +43,13 @@ h3 {
   margin-bottom: 0.5rem;
 }
 
+/* ← هنا التعديل: تكبير الجملة التفاعلية */
 #live {
   background: #fffafc;
   border-radius: 14px;
   padding: 1rem;
-  font-size: 2rem; /* تكبير درجتين */
-  line-height: 2.2rem;
+  font-size: 2rem; /* ← كان 1.8rem، الآن 2rem (أكبر درجتين) */
+  line-height: 2.4rem;
   margin-bottom: 1rem;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.06);
 }
