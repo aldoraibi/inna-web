@@ -1,4 +1,4 @@
-/* InnaWaAkhawatuha Web — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
+/* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
@@ -62,5 +62,11 @@ const ITEMS = [
   { mub:{m:"الطريقُ الطويلُ",a:"الطريقَ الطويلَ",j:"الطريقِ الطويلِ"}, khb:{m:"ممهدٌ",a:"ممهدًا",j:"ممهدٍ"} },
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
+
+// استدعاء أول جملة تلقائيًا عند تحميل الصفحة
 let current = 0;
-renderSentence(ITEMS[current]);
+if (typeof renderSentence === "function") {
+  renderSentence(ITEMS[current]);
+} else if (typeof showItem === "function") {
+  showItem(ITEMS[current]);
+}
