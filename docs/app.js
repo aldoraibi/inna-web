@@ -1,6 +1,6 @@
 /* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
-/* 🟢 قائمة الجمل */
+/* 🟢 قائمة الجمل (كما هي) */
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
   { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
@@ -64,13 +64,18 @@ const ITEMS = [
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
 
-/* 🔹 حالة البرنامج */
+/* 🔹 حالة البرنامج ومراحل التفاعل */
 const state = {
-  idx: 0, verb: null, twoStep: true,
-  mCase: "m", kCase: "m", success:false
+  idx: 0,
+  phase: "pickM", // pickM -> pickK -> verb -> cases
+  mCase: "m",
+  kCase: "m",
+  verb: null,
+  mSelected: false,
+  kSelected: false
 };
 
-/* 🔹 وظائف العرض */
+/* عناصر DOM */
 const $ = s => document.querySelector(s);
 const liveEl = $("#live");
 const mubSec = $("#mubSection");
@@ -78,118 +83,206 @@ const khabSec = $("#khabSection");
 const feedback = $("#feedback");
 const checkBtn = $("#checkBtn");
 const nextBtn = $("#nextBtn");
-const twoStepEl = $("#twoStep");
 
+/* مساعدات */
 function current(){ return ITEMS[state.idx]; }
-function form(forms,c){ return forms[c]; }
+function form(forms, key){ return forms[key]; }
+function wordsOf(text){ return text.trim().split(/\s+/); }
 
-/* رسم الجملة الحية */
+/* رسم الجملة حسب المرحلة */
 function renderLive(){
   const { mub: M, khb: K } = current();
   const mText = form(M, state.mCase);
   const kText = form(K, state.kCase);
-  liveEl.innerHTML = `${state.verb ? `<span class="verb">${state.verb}</span> ` : ""}<span class="token sel-m">${mText}</span> <span class="token sel-k">${kText}</span>`;
-  checkBtn.disabled = !(state.verb && state.mCase && state.kCase);
+
+  const mWords = wordsOf(mText);
+  const kWords = wordsOf(kText);
+
+  // نبني الجملة: مبتدأ ثم خبر
+  const mHtml = mWords.map(w => `<span class="token ${state.mSelected ? 'sel-m' : ''}" data-part="m">${w}</span>`).join(" ");
+  const kHtml = kWords.map(w => `<span class="token ${state.kSelected ? 'sel-k' : ''}" data-part="k">${w}</span>`).join(" ");
+
+  const verbHtml = state.verb ? `<span class="verb">${state.verb}</span> ` : "";
+
+  liveEl.innerHTML = `${verbHtml}${mHtml} ${kHtml}`;
+
+  // تمكين/تعطيل الأزرار
+  checkBtn.disabled = state.phase !== "cases"; // التحقق بعد ظهور الحالات
+  nextBtn.disabled = true;
+
+  // ربط النقر على الكلمات حسب المرحلة
+  bindTokenClicks();
 }
 
-/* رسم أزرار الحالات */
-function renderForms(){
-  const caseChip = (label, key, target) => `
-    <button class="form-chip ${target === key ? 'sel' : ''}" data-case="${key}">${label}</button>
-  `;
+/* ربط نقر الكلمات */
+function bindTokenClicks(){
+  liveEl.querySelectorAll(".token").forEach(tok=>{
+    tok.onclick = ()=>{
+      const part = tok.dataset.part;
+      if(state.phase === "pickM" && part === "m"){
+        state.mSelected = true;            // المبتدأ باللون الأحمر
+        state.phase = "pickK";
+        feedback.className = "feedback hidden";
+        feedback.textContent = "";
+        renderLive();
+        renderUISections();                // تحديث التعليمات
+      }else if(state.phase === "pickK" && part === "k"){
+        state.kSelected = true;            // الخبر باللون الأزرق
+        state.phase = "verb";
+        renderLive();
+        renderUISections();                // إظهار الحروف الناسخة
+      }
+    };
+  });
+}
 
-  mubSec.innerHTML = `
-    <h3>اختر حالة اسم إن</h3>
-    <div class="forms" id="mubForms">
-      ${caseChip("مرفوع (م)", "m", state.mCase)}
-      ${caseChip("منصوب (أ)", "a", state.mCase)}
-      ${caseChip("مجرور (ج)", "j", state.mCase)}
+/* رسم الأقسام المساندة بحسب المرحلة */
+function renderUISections(){
+  const hint = msg => {
+    feedback.className = "feedback ok";
+    feedback.textContent = msg;
+  };
+
+  if(state.phase === "pickM"){
+    mubSec.innerHTML = `<h3>حدد المبتدأ من الجملة</h3><p class="helper">اضغط على المبتدأ ليصبح لونه أحمر.</p>`;
+    khabSec.innerHTML = ``;
+    feedback.className = "feedback hidden";
+    feedback.textContent = "";
+    renderChips(false);
+    renderForms(false);
+  }else if(state.phase === "pickK"){
+    mubSec.innerHTML = `<h3>المبتدأ محدد</h3><p class="helper">الآن اضغط على الخبر ليصبح لونه أزرق.</p>`;
+    khabSec.innerHTML = ``;
+    hint("جميل! حدِّدتَ المبتدأ، حدد الخبر الآن.");
+    renderChips(false);
+    renderForms(false);
+  }else if(state.phase === "verb"){
+    mubSec.innerHTML = `<h3>اختر الأداة الناسخة</h3><p class="helper">اضغط على إنَّ أو ليتَ أو لعلَّ أو كأنَّ لتظهر في الجملة باللون الأخضر.</p>`;
+    khabSec.innerHTML = ``;
+    hint("اختَر الأداة الناسخة.");
+    renderChips(true);
+    renderForms(false);
+  }else if(state.phase === "cases"){
+    mubSec.innerHTML = `<h3>حالات اسم إن</h3>`;
+    khabSec.innerHTML = `<h3>حالات خبر إن</h3>`;
+    hint("اختر الحالات الإعرابية للاسم والخبر.");
+    renderChips(true);
+    renderForms(true);
+  }
+}
+
+/* رسم الحروف الناسخة */
+function renderChips(show){
+  const chipsWrap = document.querySelector(".chips");
+  if(!chipsWrap) return;
+  if(!show){
+    chipsWrap.style.display = "none";
+    return;
+  }
+  chipsWrap.style.display = "block";
+  chipsWrap.querySelectorAll(".chip").forEach(b=>{
+    b.classList.toggle("active", b.dataset.verb === state.verb);
+    b.onclick = ()=>{
+      chipsWrap.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      state.verb = b.dataset.verb;
+      // عند اختيار الأداة ننتقل لمرحلة الحالات
+      state.phase = "cases";
+      renderLive();
+      renderUISections();
+    };
+  });
+}
+
+/* رسم أزرار الحالات (اسم إن + خبره) */
+function renderForms(show){
+  if(!show){
+    document.getElementById("mubSection").innerHTML += `<p class="helper">سيتم عرض الحالات بعد اختيار الأداة الناسخة.</p>`;
+    document.getElementById("khabSection").innerHTML = ``;
+    return;
+  }
+
+  const caseBtn = (label, key, currentKey) =>
+    `<button class="form-chip ${currentKey === key ? 'sel' : ''}" data-case="${key}">${label}</button>`;
+
+  // اسم إن
+  const mHTML = `
+    <div class="forms" id="mForms">
+      ${caseBtn("مرفوع", "m", state.mCase)}
+      ${caseBtn("منصوب", "a", state.mCase)}
+      ${caseBtn("مجرور", "j", state.mCase)}
+    </div>
+  `;
+  // خبر إن
+  const kHTML = `
+    <div class="forms" id="kForms">
+      ${caseBtn("مرفوع", "m", state.kCase)}
+      ${caseBtn("منصوب", "a", state.kCase)}
+      ${caseBtn("مجرور", "j", state.kCase)}
     </div>
   `;
 
-  khabSec.innerHTML = `
-    <h3>اختر حالة خبر إن</h3>
-    <div class="forms" id="khabForms">
-      ${caseChip("مرفوع (م)", "m", state.kCase)}
-      ${caseChip("منصوب (أ)", "a", state.kCase)}
-      ${caseChip("مجرور (ج)", "j", state.kCase)}
-    </div>
-  `;
+  mubSec.innerHTML = `<h3>حالات اسم إن</h3>${mHTML}`;
+  khabSec.innerHTML = `<h3>حالات خبر إن</h3>${kHTML}`;
 
   // ربط الأحداث
-  document.querySelectorAll("#mubForms .form-chip").forEach(btn=>{
+  document.querySelectorAll("#mForms .form-chip").forEach(btn=>{
     btn.onclick = ()=>{
       state.mCase = btn.dataset.case;
       renderLive();
-      renderForms();
+      renderForms(true);
     };
   });
-  document.querySelectorAll("#khabForms .form-chip").forEach(btn=>{
+  document.querySelectorAll("#kForms .form-chip").forEach(btn=>{
     btn.onclick = ()=>{
       state.kCase = btn.dataset.case;
       renderLive();
-      renderForms();
+      renderForms(true);
     };
   });
 }
 
-/* التحقق */
+/* التحقق: إرشادي وليس تصحيحي صارم */
 function check(){
-  if(!state.verb){
+  if(state.phase !== "cases"){
     feedback.className = "feedback bad";
-    feedback.textContent = "اختر الأداة الناسخة أولًا.";
+    feedback.textContent = "أكمل الخطوات: حدِّد المبتدأ ثم الخبر ثم الأداة ثم الحالات.";
     return;
   }
-  // القاعدة: اسم إن منصوب (a) وخبرها مرفوع (m)
+  // قاعدة إنّ: الاسم منصوب والخبر مرفوع (للتدريب الأساسي)
   const ok = state.mCase === "a" && state.kCase === "m";
   if(ok){
     feedback.className = "feedback ok";
     feedback.textContent = "أحسنت! اسم إن منصوب وخبرها مرفوع.";
-    state.success = true;
     nextBtn.disabled = false;
   }else{
     feedback.className = "feedback bad";
-    feedback.textContent = "جرّب مرة أخرى: اجعل الاسم منصوبًا والخبر مرفوعًا.";
+    feedback.textContent = "جرّب: اجعل اسم إن منصوبًا والخبر مرفوعًا.";
   }
 }
 
-/* التالي */
+/* التالي: إعادة الضبط */
 function next(){
-  state.idx = (state.idx+1) % ITEMS.length;
-  state.verb = null;
+  state.idx = (state.idx + 1) % ITEMS.length;
+  state.phase = "pickM";
   state.mCase = "m";
   state.kCase = "m";
-  state.success = false;
-  nextBtn.disabled = true;
+  state.verb = null;
+  state.mSelected = false;
+  state.kSelected = false;
   feedback.textContent = "";
   feedback.className = "feedback hidden";
-  // إعادة ضبط تفعيل الأزرار
-  document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
+  nextBtn.disabled = true;
+  // إلغاء تنشيط الأزرار الناسخة
+  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
   renderLive();
-  renderForms();
+  renderUISections();
 }
 
-/* الحروف الناسخة */
-document.querySelectorAll(".chip[data-verb]").forEach(b=>{
-  b.onclick = ()=>{
-    document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    state.verb = b.dataset.verb;
-    renderLive();
-  };
-});
+/* ربط الأزرار */
+document.getElementById("checkBtn").onclick = check;
+document.getElementById("nextBtn").onclick = next;
 
-/* خيار الاختيار التدريجي (إن رغبت لاحقًا) */
-if(twoStepEl){
-  twoStepEl.onchange = ()=>{
-    state.twoStep = !!twoStepEl.checked;
-  };
-}
-
-/* الأزرار */
-checkBtn.onclick = check;
-nextBtn.onclick = next;
-
-/* بدء البرنامج */
+/* بدء التشغيل */
 renderLive();
-renderForms();
+renderUISections();
