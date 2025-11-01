@@ -3,127 +3,40 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>إنَّ وأخواتها — تدريب خطوة بخطوة</title>
-  <style>
-    :root {
-      --bg:#f5f7fb;--card:#fff;--txt:#0f172a;--muted:#6b7280;
-      --brand:#2563eb;--ok:#16a34a;--bad:#dc2626
-    }
-    body {
-      margin:0;background:var(--bg);color:var(--txt);
-      font-family:system-ui,"Segoe UI",Tahoma,Arial
-    }
-    .wrap{max-width:980px;margin:24px auto;padding:0 16px}
-    header {
-      background:var(--card);border-radius:16px;
-      box-shadow:0 1px 2px rgba(0,0,0,.06);padding:18px 22px
-    }
-    h1{margin:0 0 6px;font-size:clamp(22px,4vw,34px)}
-    .muted{color:var(--muted)}
-    .counter {
-      display:inline-flex;gap:6px;align-items:center;
-      background:#eef2ff;border-radius:12px;padding:4px 10px;margin-top:8px
-    }
-    .counter b{font-size:18px;color:var(--brand);transition:all .3s ease;}
-    .card {
-      background:var(--card);border-radius:16px;
-      box-shadow:0 1px 2px rgba(0,0,0,.06);
-      padding:18px 22px;margin-top:16px
-    }
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chips{display:flex;gap:8px;flex-wrap:wrap}
-    .chip {
-      border:1px solid #e5e7eb;background:#f8fafc;
-      border-radius:999px;padding:8px 12px;cursor:pointer
-    }
-    .chip.active{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.35)}
-    .prompt-live {
-      font-size:clamp(26px,5.5vw,42px);text-align:center;
-      margin:10px 0 6px;font-weight:800
-    }
-    .form-chip {
-      border:1px solid #e5e7eb;background:#f8fafc;
-      border-radius:12px;padding:8px 12px;
-      cursor:pointer;margin-inline-end:8px
-    }
-    .form-chip.sel{background:rgba(37,99,235,.10);border-color:rgba(37,99,235,.30)}
-    .btn {
-      display:inline-block;border:1px solid #e5e7eb;background:#f8fafc;
-      border-radius:12px;padding:12px 16px;font-size:18px;cursor:pointer
-    }
-    .btn.primary{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.25)}
-    .btn[disabled]{opacity:.6;cursor:not-allowed}
-    .feedback{padding:12px;border-radius:12px;margin-top:10px}
-    .feedback.ok {
-      background:rgba(22,163,74,.10);
-      border:1px solid rgba(22,163,74,.25)
-    }
-    .feedback.bad {
-      background:rgba(220,38,38,.08);
-      border:1px solid rgba(220,38,38,.25)
-    }
-    .name-red{color:#dc2626;font-weight:800}
-    .khabar-blue{color:#1d4ed8;font-weight:800}
-    footer {
-      color:#666;text-align:center;margin:22px 0 40px;font-size:14px
-    }
-  </style>
+  <title>إنَّ وأخواتها — تدريب تفاعلي</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="wrap">
-    <header>
-      <h1>إنَّ وأخواتها — تدريب خطوة بخطوة</h1>
-      <div class="muted">
-        حدِّد المبتدأ والخبر أولًا، ثم اختر الأداة الناسخة، ثم صيغة <b>اسم إنَّ</b> و<b>خبرها</b> الصحيحتين.
-      </div>
-      <div class="counter">
-        <span>عدد الزوار:</span><b id="visitor-count">0</b>
-      </div>
-    </header>
+  <main class="card">
+    <h1>تعلم إنَّ وأخواتها بطريقة تفاعلية ممتعة</h1>
+    <div id="live"></div>
 
-    <div class="card">
-      <div class="row" style="justify-content:space-between">
-        <div>السؤال <b id="qnum">1</b> / <span id="qtotal">0</span></div>
-        <div class="muted" id="stepHint">① عيِّن المبتدأ والخبر من الجملة</div>
-      </div>
+    <section id="mubSection"></section>
+    <section id="khabSection"></section>
 
-      <div id="sentence" class="prompt-live"></div>
-
-      <div class="section">
-        <div class="section-title">الأداة الناسخة</div>
-        <div class="chips" id="verbChips">
-          <span class="chip" data-verb="إنَّ">إنَّ</span>
-          <span class="chip" data-verb="ليتَ">ليتَ</span>
-          <span class="chip" data-verb="لعلَّ">لعلَّ</span>
-          <span class="chip" data-verb="كأنَّ">كأنَّ</span>
-        </div>
-      </div>
-
-      <div class="row" style="gap:22px">
-        <div style="flex:1">
-          <div class="section-title">صيغة اسم إنَّ</div>
-          <div id="mubForms"></div>
-        </div>
-        <div style="flex:1">
-          <div class="section-title">صيغة الخبر</div>
-          <div id="khabForms"></div>
-        </div>
-      </div>
-
-      <div id="feedback" class="feedback" style="display:none"></div>
-
-      <div class="row" style="justify-content:center;margin-top:12px">
-        <button id="checkBtn" class="btn">تحقق</button>
-        <button id="nextBtn" class="btn primary" disabled>التالي</button>
-      </div>
+    <div class="verbs">
+      <button class="chip" data-verb="إنَّ">إنَّ</button>
+      <button class="chip" data-verb="أنَّ">أنَّ</button>
+      <button class="chip" data-verb="كأنَّ">كأنَّ</button>
+      <button class="chip" data-verb="لكنَّ">لكنَّ</button>
+      <button class="chip" data-verb="ليتَ">ليتَ</button>
+      <button class="chip" data-verb="لعلَّ">لعلَّ</button>
     </div>
 
-    <footer>إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي</footer>
-  </div>
+    <div class="controls">
+      <button id="checkBtn">تحقق</button>
+      <button id="nextBtn">التالي</button>
+    </div>
 
-  <!-- ✅ استدعاء ملفات السكربت -->
-  <script src="bank-inna.js?v=3"></script>
-  <script src="app.js?v=3" defer></script>
+    <div id="feedback" class="feedback hidden"></div>
+
+    <footer>
+      <div id="visitorCount">عدد الزوار: <span id="count">0</span></div>
+      <p>إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي</p>
+    </footer>
+  </main>
+
+  <script src="bank.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
