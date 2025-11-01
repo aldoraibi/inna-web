@@ -1,16 +1,14 @@
-/* تصميم واجهة تطبيق إنَّ وأخواتها - إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
+/* تصميم تطبيق إنَّ وأخواتها - إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
 :root {
   --bg: #f5f7fb;
   --card: #ffffff;
   --txt: #0f172a;
   --muted: #6b7280;
-  --brand: #e11d48; /* أحمر لإنَّ */
-  --ok: #16a34a;
-  --bad: #dc2626;
-  --blue: #2563eb; /* أزرق للخبر */
-  --green: #16a34a; /* أخضر للحروف الناسخة داخل الجملة */
-  --dark-blue: #1e3a8a; /* أزرق غامق للعناوين */
+  --brand: #e11d48; /* اسم إن */
+  --ok: #16a34a; /* لون الحروف الناسخة في الجملة */
+  --blue: #2563eb; /* خبر إن */
+  --dark-blue: #1e3a8a; /* العناوين */
 }
 
 body {
@@ -67,30 +65,25 @@ h3 {
 
 /* اسم إن */
 .token.sel-m {
-  color: var(--brand); /* أحمر */
+  color: var(--brand);
   font-weight: bold;
 }
 
 /* خبر إن */
 .token.sel-k {
-  color: var(--blue); /* أزرق */
+  color: var(--blue);
   font-weight: bold;
 }
 
-/* ✅ الحروف الناسخة */
+/* ✅ الحروف الناسخة داخل الجملة */
 .verb {
-  color: #000; /* أسود افتراضي */
+  color: var(--ok); /* أخضر عندما تضاف إلى الجملة */
   font-weight: bold;
   margin: 0 0.4rem;
-  transition: color 0.2s;
+  transition: color 0.2s ease-in-out;
 }
 
-/* عند إضافتها إلى الجملة (نشطة) */
-.verb.active {
-  color: var(--green); /* أخضر */
-}
-
-/* أزرار الحروف الناسخة */
+/* ✅ الأزرار الخاصة بالحروف الناسخة */
 .chips {
   margin: 1rem 0;
 }
@@ -100,7 +93,7 @@ h3 {
   padding: 0.45rem 1.2rem;
   border-radius: 12px;
   border: 1px solid #d1d5db;
-  color: #000000; /* أسود دائمًا */
+  color: #000; /* أسود افتراضي */
   background: #ffffff;
   margin: 0.3rem;
   transition: all 0.2s;
@@ -111,7 +104,14 @@ h3 {
   background: #f3f4f6;
 }
 
-/* أزرار الصيغ */
+/* ✅ عند اختيار الحرف الناسخ */
+.chips .chip.active {
+  background: #e5e7eb;
+  color: #000;
+  border-color: #cbd5e1;
+}
+
+/* أزرار اختيار الصيغ */
 .forms {
   display: flex;
   flex-wrap: wrap;
@@ -141,7 +141,7 @@ h3 {
   border-color: var(--blue);
 }
 
-/* تعليمات مساعدة */
+/* تعليمات المساعدة */
 .helper {
   color: var(--muted);
   font-size: 1.1rem;
@@ -163,8 +163,8 @@ h3 {
 }
 
 .feedback.bad {
-  color: var(--bad);
-  background: rgba(220, 38, 38, 0.08);
+  color: var(--brand);
+  background: rgba(225, 29, 72, 0.08);
 }
 
 .feedback.hidden {
