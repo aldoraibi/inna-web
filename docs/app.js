@@ -1,5 +1,6 @@
 /* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
+/* 🟢 قائمة الجمل */
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
   { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
@@ -63,14 +64,66 @@ const ITEMS = [
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
 
-// بدء التطبيق فور تحميل الصفحة
-document.addEventListener("DOMContentLoaded", () => {
-  state.idx = 0;
+/* 🔹 حالة البرنامج */
+const state = {
+  idx: 0, verb: null, twoStep: true,
+  mCase: null, kCase: null, mPick: null, kPick: null, success:false
+};
+
+/* 🔹 وظائف العرض */
+const $ = s => document.querySelector(s);
+const liveEl = $("#live");
+const mubSec = $("#mubSection");
+const khabSec = $("#khabSection");
+const feedback = $("#feedback");
+const checkBtn = $("#checkBtn");
+const nextBtn = $("#nextBtn");
+const twoStep = $("#twoStep");
+
+function splitTokens(text){ return text.trim().split(/\s+/); }
+function current(){ return ITEMS[state.idx]; }
+function conj(v){ return v; }
+function form(forms,c){ return forms[c ?? "m"]; }
+
+function renderLive(){
+  const M = current().mub, K = current().khb;
+  const mText = form(M, state.mCase ?? "m");
+  const kText = form(K, state.kCase ?? "m");
+  liveEl.innerHTML = `${state.verb ? `<span class='verb'>${state.verb}</span> ` : ""}${mText} ${kText}`;
+  checkBtn.disabled = !state.verb;
+}
+
+function check(){
+  if(!state.verb) return;
+  feedback.className = "feedback ok";
+  feedback.textContent = "أحسنت! القاعدة صحيحة: اسم إن منصوب وخبرها مرفوع.";
+  state.success = true;
+  nextBtn.disabled = false;
+}
+
+function next(){
+  state.idx = (state.idx+1) % ITEMS.length;
   state.verb = null;
-  state.mCase = null;
-  state.kCase = null;
-  state.mPick = null;
-  state.kPick = null;
   state.success = false;
-  refresh(true); // عرض أول جملة مباشرة
+  nextBtn.disabled = true;
+  renderLive();
+  feedback.textContent = "";
+  feedback.className = "feedback hidden";
+}
+
+/* 🔹 الحروف الناسخة */
+document.querySelectorAll(".chip[data-verb]").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    state.verb = b.dataset.verb;
+    renderLive();
+  };
 });
+
+/* 🔹 الأزرار */
+checkBtn.onclick = check;
+nextBtn.onclick = next;
+
+/* 🔹 بدء البرنامج */
+document.addEventListener("DOMContentLoaded", ()=> renderLive());
