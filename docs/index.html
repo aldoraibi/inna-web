@@ -5,23 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>إنَّ وأخواتها — تدريب تفاعلي</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* تكبير خط أزرار الحروف الناسخة */
+    .chips .chip {
+      font-size: 1.8rem;   /* ← حجم كبير وواضح */
+      padding: 0.5rem 1.4rem;
+      border-radius: 12px;
+      border: 2px solid #e11d48;
+      color: #e11d48;
+      background: #fff0f4;
+      margin: 0.3rem;
+      transition: all 0.2s;
+      font-weight: 600;
+    }
+
+    .chips .chip:hover {
+      background: #e11d48;
+      color: white;
+    }
+
+    .chips .chip.active {
+      background: #e11d48;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <main>
     <h1>إنَّ وأخواتها — تدريب تفاعلي</h1>
-    <p>اختر الأدوات والصيغ الصحيحة لإتمام المعنى.</p>
+    <p>اختر الأداة الناسخة ثم حدد الصيغ الصحيحة لإتمام المعنى.</p>
 
     <!-- منطقة الجملة -->
     <div id="live" class="card"></div>
 
-    <!-- اختيار نوع الأداة -->
+    <!-- أزرار الحروف الناسخة (فقط الأربعة المطلوبة) -->
     <div class="chips">
       <button class="chip" data-verb="إنَّ">إنَّ</button>
-      <button class="chip" data-verb="أنَّ">أنَّ</button>
-      <button class="chip" data-verb="كأنَّ">كأنَّ</button>
-      <button class="chip" data-verb="لكنَّ">لكنَّ</button>
       <button class="chip" data-verb="ليتَ">ليتَ</button>
       <button class="chip" data-verb="لعلَّ">لعلَّ</button>
+      <button class="chip" data-verb="كأنَّ">كأنَّ</button>
     </div>
 
     <!-- أقسام التمارين -->
