@@ -67,7 +67,7 @@ const ITEMS = [
 /* 🔹 حالة البرنامج */
 const state = {
   idx: 0, verb: null, twoStep: true,
-  mCase: null, kCase: null, mPick: null, kPick: null, success:false
+  mCase: "m", kCase: "m", success:false
 };
 
 /* 🔹 وظائف العرض */
@@ -78,40 +78,98 @@ const khabSec = $("#khabSection");
 const feedback = $("#feedback");
 const checkBtn = $("#checkBtn");
 const nextBtn = $("#nextBtn");
-const twoStep = $("#twoStep");
+const twoStepEl = $("#twoStep");
 
-function splitTokens(text){ return text.trim().split(/\s+/); }
 function current(){ return ITEMS[state.idx]; }
-function conj(v){ return v; }
-function form(forms,c){ return forms[c ?? "m"]; }
+function form(forms,c){ return forms[c]; }
 
+/* رسم الجملة الحية */
 function renderLive(){
-  const M = current().mub, K = current().khb;
-  const mText = form(M, state.mCase ?? "m");
-  const kText = form(K, state.kCase ?? "m");
-  liveEl.innerHTML = `${state.verb ? `<span class='verb'>${state.verb}</span> ` : ""}${mText} ${kText}`;
-  checkBtn.disabled = !state.verb;
+  const { mub: M, khb: K } = current();
+  const mText = form(M, state.mCase);
+  const kText = form(K, state.kCase);
+  liveEl.innerHTML = `${state.verb ? `<span class="verb">${state.verb}</span> ` : ""}<span class="token sel-m">${mText}</span> <span class="token sel-k">${kText}</span>`;
+  checkBtn.disabled = !(state.verb && state.mCase && state.kCase);
 }
 
+/* رسم أزرار الحالات */
+function renderForms(){
+  const caseChip = (label, key, target) => `
+    <button class="form-chip ${target === key ? 'sel' : ''}" data-case="${key}">${label}</button>
+  `;
+
+  mubSec.innerHTML = `
+    <h3>اختر حالة اسم إن</h3>
+    <div class="forms" id="mubForms">
+      ${caseChip("مرفوع (م)", "m", state.mCase)}
+      ${caseChip("منصوب (أ)", "a", state.mCase)}
+      ${caseChip("مجرور (ج)", "j", state.mCase)}
+    </div>
+  `;
+
+  khabSec.innerHTML = `
+    <h3>اختر حالة خبر إن</h3>
+    <div class="forms" id="khabForms">
+      ${caseChip("مرفوع (م)", "m", state.kCase)}
+      ${caseChip("منصوب (أ)", "a", state.kCase)}
+      ${caseChip("مجرور (ج)", "j", state.kCase)}
+    </div>
+  `;
+
+  // ربط الأحداث
+  document.querySelectorAll("#mubForms .form-chip").forEach(btn=>{
+    btn.onclick = ()=>{
+      state.mCase = btn.dataset.case;
+      renderLive();
+      renderForms();
+    };
+  });
+  document.querySelectorAll("#khabForms .form-chip").forEach(btn=>{
+    btn.onclick = ()=>{
+      state.kCase = btn.dataset.case;
+      renderLive();
+      renderForms();
+    };
+  });
+}
+
+/* التحقق */
 function check(){
-  if(!state.verb) return;
-  feedback.className = "feedback ok";
-  feedback.textContent = "أحسنت! القاعدة صحيحة: اسم إن منصوب وخبرها مرفوع.";
-  state.success = true;
-  nextBtn.disabled = false;
+  if(!state.verb){
+    feedback.className = "feedback bad";
+    feedback.textContent = "اختر الأداة الناسخة أولًا.";
+    return;
+  }
+  // القاعدة: اسم إن منصوب (a) وخبرها مرفوع (m)
+  const ok = state.mCase === "a" && state.kCase === "m";
+  if(ok){
+    feedback.className = "feedback ok";
+    feedback.textContent = "أحسنت! اسم إن منصوب وخبرها مرفوع.";
+    state.success = true;
+    nextBtn.disabled = false;
+  }else{
+    feedback.className = "feedback bad";
+    feedback.textContent = "جرّب مرة أخرى: اجعل الاسم منصوبًا والخبر مرفوعًا.";
+  }
 }
 
+/* التالي */
 function next(){
   state.idx = (state.idx+1) % ITEMS.length;
   state.verb = null;
+  state.mCase = "m";
+  state.kCase = "m";
   state.success = false;
   nextBtn.disabled = true;
-  renderLive();
   feedback.textContent = "";
   feedback.className = "feedback hidden";
+  // إعادة ضبط تفعيل الأزرار
+  document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
+  renderLive();
+  renderForms();
 }
 
-/* 🔹 الحروف الناسخة */
+/* الحروف الناسخة */
 document.querySelectorAll(".chip[data-verb]").forEach(b=>{
   b.onclick = ()=>{
     document.querySelectorAll(".chip[data-verb]").forEach(x=>x.classList.remove("active"));
@@ -121,9 +179,17 @@ document.querySelectorAll(".chip[data-verb]").forEach(b=>{
   };
 });
 
-/* 🔹 الأزرار */
+/* خيار الاختيار التدريجي (إن رغبت لاحقًا) */
+if(twoStepEl){
+  twoStepEl.onchange = ()=>{
+    state.twoStep = !!twoStepEl.checked;
+  };
+}
+
+/* الأزرار */
 checkBtn.onclick = check;
 nextBtn.onclick = next;
 
-/* 🔹 بدء البرنامج */
-document.addEventListener("DOMContentLoaded", ()=> renderLive());
+/* بدء البرنامج */
+renderLive();
+renderForms();
