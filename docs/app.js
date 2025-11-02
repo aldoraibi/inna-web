@@ -30,13 +30,6 @@ const ITEMS = [
   { mub:{m:"المعلِّمُ الخبيرُ",a:"المعلِّمَ الخبيرَ",j:"المعلِّمِ الخبيرِ"}, khb:{m:"ناجحٌ",a:"ناجحًا",j:"ناجحٍ"} },
   { mub:{m:"البحرُ الهادئُ",a:"البحرَ الهادئَ",j:"البحرِ الهادئِ"}, khb:{m:"جميلٌ في المساءِ",a:"جميلًا في المساءِ",j:"جميلٍ في المساءِ"} },
   { mub:{m:"الكتابُ",a:"الكتابَ",j:"الكتابِ"}, khb:{m:"مفيدٌ",a:"مفيدًا",j:"مفيدٍ"} },
-  { mub:{m:"البيتُ الجميلُ",a:"البيتَ الجميلَ",j:"البيتِ الجميلِ"}, khb:{m:"واسعٌ",a:"واسعًا",j:"واسعٍ"} },
-  { mub:{m:"القمرُ المنيرُ",a:"القمرَ المنيرَ",j:"القمرِ المنيرِ"}, khb:{m:"يضيءُ سماءَ الليلِ",a:"يضيءَ سماءَ الليلِ",j:"يضيءِ سماءَ الليلِ"} },
-  { mub:{m:"الطفلُ اللطيفُ",a:"الطفلَ اللطيفَ",j:"الطفلِ اللطيفِ"}, khb:{m:"يبتسمُ للجميعِ",a:"يبتسمَ للجميعِ",j:"يبتسمِ للجميعِ"} },
-  { mub:{m:"الزهرةُ",a:"الزهرةَ",j:"الزهرةِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
-  { mub:{m:"الطفلُ الصغيرُ",a:"الطفلَ الصغيرَ",j:"الطفلِ الصغيرِ"}, khb:{m:"لطيفٌ",a:"لطيفًا",j:"لطيفٍ"} },
-  { mub:{m:"الجيشُ",a:"الجيشَ",j:"الجيشِ"}, khb:{m:"قويٌّ",a:"قويًّا",j:"قويٍّ"} },
-  { mub:{m:"المطرُ",a:"المطرَ",j:"المطرِ"}, khb:{m:"نافعٌ",a:"نافعًا",j:"نافعٍ"} },
   { mub:{m:"القمرُ",a:"القمرَ",j:"القمرِ"}, khb:{m:"منيرٌ",a:"منيرًا",j:"منيرٍ"} }
 ];
 
@@ -110,20 +103,22 @@ function renderForms(){
   const nameLabel=`اسم ${v}`, khabLabel=`خبر ${v}`;
   const m=state.mWord||"—", k=state.kWord||"—";
 
-  mubSec.innerHTML=`<h3>${nameLabel}</h3>
+  mubSec.innerHTML=`
+  <h3>${nameLabel}</h3>
   <div class="chosen">${m}</div>
   <div class="forms" id="mForms">
-    <button class="form red" data-case="a">${m}َ</button>
-    <button class="form blue" data-case="m">${m}ُ</button>
-    <button class="form green" data-case="j">${m}ِ</button>
+    <button class="form" data-case="m">${m}ُ (رفع)</button>
+    <button class="form" data-case="a">${m}َ (نصب)</button>
+    <button class="form" data-case="j">${m}ِ (جر)</button>
   </div>`;
 
-  khabSec.innerHTML=`<h3>${khabLabel}</h3>
+  khabSec.innerHTML=`
+  <h3>${khabLabel}</h3>
   <div class="chosen">${k}</div>
   <div class="forms" id="kForms">
-    <button class="form red" data-case="a">${k}َ</button>
-    <button class="form blue" data-case="m">${k}ُ</button>
-    <button class="form green" data-case="j">${k}ِ</button>
+    <button class="form" data-case="m">${k}ُ (رفع)</button>
+    <button class="form" data-case="a">${k}َ (نصب)</button>
+    <button class="form" data-case="j">${k}ِ (جر)</button>
   </div>`;
 
   document.querySelectorAll("#mForms .form").forEach(b=>b.onclick=()=>{state.mCase=b.dataset.case;renderLive();renderForms();});
