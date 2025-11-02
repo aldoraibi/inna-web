@@ -80,7 +80,7 @@ function renderLive(){
   const mHtml=wordsOf(m).map(w=>`<span class="token ${state.mSelected&&state.mWord===w?'sel-m':''}" data-part="m">${w}</span>`).join(" ");
   const kHtml=wordsOf(k).map(w=>`<span class="token ${state.kSelected&&state.kWord===w?'sel-k':''}" data-part="k">${w}</span>`).join(" ");
   const v=state.verb?`<span class="verb">${state.verb}</span>`:"";
-  live.innerHTML=`${v} ${mHtml} ${kHtml}`;
+  live.innerHTML = `${v} ${mHtml} ${kHtml}`;
   bindClicks();
   checkBtn.disabled=state.phase!=="cases"; nextBtn.disabled=true;
 }
