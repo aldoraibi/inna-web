@@ -1,244 +1,155 @@
-/* تصميم تطبيق إنَّ وأخواتها - إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
+/* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
-:root {
-  --bg: #f5f7fb;
-  --card: #ffffff;
-  --txt: #0f172a;
-  --muted: #6b7280;
-  --brand: #e11d48; /* اسم إن */
-  --ok: #16a34a; /* لون الحروف الناسخة في الجملة */
-  --blue: #2563eb; /* خبر إن */
-  --light-blue: #e0f2fe; /* خلفية الجملة التفاعلية */
-  --dark-blue: #1e3a8a; /* العناوين */
-}
+/* الجمل (٦٠ جملة) */
+const ITEMS = [
+  { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
+  { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
+  { mub:{m:"المدينةُ الكبيرةُ",a:"المدينةَ الكبيرةَ",j:"المدينةِ الكبيرةِ"}, khb:{m:"هادئةٌ وجميلةٌ",a:"هادئةً وجميلةً",j:"هادئةٍ وجميلةٍ"} },
+  { mub:{m:"الطالبُ",a:"الطالبَ",j:"الطالبِ"}, khb:{m:"مجدٌ",a:"مجدًا",j:"مجدٍ"} },
+  { mub:{m:"المعلِّمُ الصبورُ",a:"المعلِّمَ الصبورَ",j:"المعلِّمِ الصبورِ"}, khb:{m:"محبوبٌ",a:"محبوبًا",j:"محبوبٍ"} },
+  { mub:{m:"المدرسةُ النظيفةُ",a:"المدرسةَ النظيفةَ",j:"المدرسةِ النظيفةِ"}, khb:{m:"منظمةٌ ومرتبةٌ",a:"منظمةً ومرتبةً",j:"منظمةٍ ومرتبةٍ"} },
+  { mub:{m:"المعلِّمُ",a:"المعلِّمَ",j:"المعلِّمِ"}, khb:{m:"قدوةٌ",a:"قدوةً",j:"قدوةٍ"} },
+  { mub:{m:"الفتاةُ الذكيةُ",a:"الفتاةَ الذكيةَ",j:"الفتاةِ الذكيةِ"}, khb:{m:"ناجحةٌ",a:"ناجحةً",j:"ناجحةٍ"} },
+  { mub:{m:"السماءُ الزرقاءُ",a:"السماءَ الزرقاءَ",j:"السماءِ الزرقاءِ"}, khb:{m:"صافيةٌ ومشرقةٌ",a:"صافيةً ومشرقةً",j:"صافيةٍ ومشرقةٍ"} },
+  { mub:{m:"المدرسةُ",a:"المدرسةَ",j:"المدرسةِ"}, khb:{m:"نظيفةٌ",a:"نظيفةً",j:"نظيفةٍ"} },
+  { mub:{m:"الولدُ النشيطُ",a:"الولدَ النشيطَ",j:"الولدِ النشيطِ"}, khb:{m:"مبدعٌ",a:"مبدعًا",j:"مبدعٍ"} },
+  { mub:{m:"الحديقةُ الواسعةُ",a:"الحديقةَ الواسعةَ",j:"الحديقةِ الواسعةِ"}, khb:{m:"مليئةٌ بالزهورِ",a:"مليئةً بالزهورِ",j:"مليئةٍ بالزهورِ"} },
+  { mub:{m:"الوقتُ",a:"الوقتَ",j:"الوقتِ"}, khb:{m:"ثمینٌ",a:"ثمینًا",j:"ثمینٍ"} },
+  { mub:{m:"الحديقةُ الكبيرةُ",a:"الحديقةَ الكبيرةَ",j:"الحديقةِ الكبيرةِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
+  { mub:{m:"الصدقُ",a:"الصدقَ",j:"الصدقِ"}, khb:{m:"فضيلةٌ",a:"فضيلةً",j:"فضيلةٍ"} },
+  { mub:{m:"المملكةُ العربيةُ",a:"المملكةَ العربيةَ",j:"المملكةِ العربيةِ"}, khb:{m:"عظيمةٌ",a:"عظيمةً",j:"عظيمةٍ"} },
+  { mub:{m:"العلمُ",a:"العلمَ",j:"العلمِ"}, khb:{m:"نورٌ",a:"نورًا",j:"نورٍ"} },
+  { mub:{m:"القمرُ",a:"القمرَ",j:"القمرِ"}, khb:{m:"منيرٌ",a:"منيرًا",j:"منيرٍ"} }
+];
 
-body {
-  background: linear-gradient(135deg, #fdf2f8, #eff6ff);
-  font-family: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif;
-  margin: 0;
-  padding: 0;
-  direction: rtl;
-  color: var(--txt);
-  min-height: 100vh;
-}
+/* الحالة العامة */
+const state = { idx:0, phase:"pickM", mCase:"m", kCase:"m", verb:null, mSelected:false, kSelected:false, mWord:"", kWord:"" };
 
-main {
-  max-width: 850px;
-  margin: 2rem auto;
-  background: var(--card);
-  border-radius: 20px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  padding: 2rem;
-  text-align: center;
-}
+/* عناصر DOM */
+const $=s=>document.querySelector(s);
+const live=$("#live"), mubSec=$("#mubSection"), khabSec=$("#khabSection"),
+feedback=$("#feedback"), checkBtn=$("#checkBtn"), nextBtn=$("#nextBtn");
 
-/* العنوان الرئيسي */
-h1 {
-  color: #000; /* أسود */
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
+/* دوال مساعدة */
+function current(){return ITEMS[state.idx];}
+function form(f,k){return f[k];}
+function wordsOf(t){return t.trim().split(/\s+/);}
 
-h3 {
-  font-size: 1.3rem;
-  color: var(--dark-blue);
-  margin-bottom: 0.5rem;
-}
-
-/* الجملة التفاعلية */
-#live {
-  background: var(--light-blue); /* أزرق فاتح */
-  border-radius: 14px;
-  padding: 1rem;
-  font-size: 2rem;
-  line-height: 2.4rem;
-  margin-bottom: 1rem;
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.04);
+/* عرض الجملة */
+function renderLive(){
+  const {mub:M,khb:K}=current();
+  const m=form(M,state.mCase),k=form(K,state.kCase);
+  const mHtml=wordsOf(m).map(w=>`<span class="token ${state.mSelected&&state.mWord===w?'sel-m':''}" data-part="m">${w}</span>`).join(" ");
+  const kHtml=wordsOf(k).map(w=>`<span class="token ${state.kSelected&&state.kWord===w?'sel-k':''}" data-part="k">${w}</span>`).join(" ");
+  const v=state.verb?`<span class="verb">${state.verb}</span>`:"";
+  live.innerHTML=`${v}${mHtml} ${kHtml}`;
+  bindClicks();
+  checkBtn.disabled=state.phase!=="cases"; nextBtn.disabled=true;
 }
 
-/* الكلمات داخل الجملة */
-.token {
-  padding: 0.1rem 0.3rem;
-  margin: 0 0.15rem;
-  border-radius: 5px;
-  transition: color 0.25s ease;
-  cursor: pointer;
+/* اختيار الكلمات */
+function bindClicks(){
+  live.querySelectorAll(".token").forEach(tok=>{
+    tok.onclick=()=>{
+      if(state.phase==="pickM"&&tok.dataset.part==="m"){
+        state.mSelected=true; state.mWord=tok.textContent; state.phase="pickK";
+        renderLive(); renderUI();
+      }else if(state.phase==="pickK"&&tok.dataset.part==="k"){
+        state.kSelected=true; state.kWord=tok.textContent; state.phase="verb";
+        renderLive(); renderUI();
+      }
+    };
+  });
 }
 
-/* اسم إن */
-.token.sel-m {
-  color: var(--brand);
-  font-weight: bold;
+/* واجهة المستخدم */
+function renderUI(){
+  const hint=t=>{feedback.className="feedback ok";feedback.textContent=t;};
+  if(state.phase==="pickM"){mubSec.innerHTML="<h3>حدد المبتدأ</h3>";khabSec.innerHTML="";renderChips(false);}
+  else if(state.phase==="pickK"){hint("الآن حدّد الخبر.");renderChips(false);}
+  else if(state.phase==="verb"){hint("اختر الأداة الناسخة.");renderChips(true);}
+  else if(state.phase==="cases"){hint("اختر الحركات المناسبة.");renderChips(true);renderForms();}
 }
 
-/* خبر إن */
-.token.sel-k {
-  color: var(--blue);
-  font-weight: bold;
+/* الحروف الناسخة */
+function renderChips(show){
+  const chips=document.querySelector(".chips"); if(!chips)return;
+  chips.style.display=show?"block":"none";
+  chips.querySelectorAll(".chip").forEach(b=>{
+    b.classList.toggle("active",b.dataset.verb===state.verb);
+    b.onclick=()=>{
+      chips.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      state.verb=b.dataset.verb;
+      state.phase="cases";
+      renderLive(); renderUI();
+    };
+  });
 }
 
-/* ✅ الحروف الناسخة داخل الجملة */
-.verb {
-  color: var(--ok); /* أخضر عند الإضافة */
-  font-weight: bold;
-  margin: 0 0.4rem;
-  transition: color 0.2s ease-in-out;
+/* عرض الحالات */
+function renderForms(){
+  // ✅ تعديل أسماء الأدوات الناسخة حسب اختيار الطالب
+  const verbs = {
+    "إنَّ": "إنَّ",
+    "إن": "إنَّ",
+    "ليت": "ليتَ",
+    "لعل": "لعلَّ",
+    "كأن": "كأنَّ",
+    "كأنَّ": "كأنَّ"
+  };
+  
+  const v = verbs[state.verb] || "إنَّ"; // يعرض الصحيح دائمًا
+  const nameLabel = `اسم ${v}`;
+  const khabLabel = `خبر ${v}`;
+
+  const m = state.mWord || "—";
+  const k = state.kWord || "—";
+
+  mubSec.innerHTML = `
+    <h3>${nameLabel}</h3>
+    <div class="chosen">${m}</div>
+    <div class="forms" id="mForms">
+      <button class="form red" data-case="a">${m}َ</button>
+      <button class="form blue" data-case="m">${m}ُ</button>
+      <button class="form green" data-case="j">${m}ِ</button>
+    </div>`;
+
+  khabSec.innerHTML = `
+    <h3>${khabLabel}</h3>
+    <div class="chosen">${k}</div>
+    <div class="forms" id="kForms">
+      <button class="form red" data-case="a">${k}َ</button>
+      <button class="form blue" data-case="m">${k}ُ</button>
+      <button class="form green" data-case="j">${k}ِ</button>
+    </div>`;
+
+  document.querySelectorAll("#mForms .form").forEach(b=>b.onclick=()=>{state.mCase=b.dataset.case;renderLive();renderForms();});
+  document.querySelectorAll("#kForms .form").forEach(b=>b.onclick=()=>{state.kCase=b.dataset.case;renderLive();renderForms();});
 }
 
-/* ✅ أزرار الحروف الناسخة */
-.chips {
-  margin: 1rem 0;
+/* التحقق */
+function check(){
+  if(state.phase!=="cases"){
+    feedback.className="feedback bad";
+    feedback.textContent="أكمل الخطوات بالترتيب.";
+    return;
+  }
+  const ok=state.mCase==="a"&&state.kCase==="m";
+  feedback.className=ok?"feedback ok":"feedback bad";
+  feedback.textContent=ok?"أحسنت! اسم الأداة منصوب وخبرها مرفوع.":"جرّب: الاسم بالفتحة والخبر بالضمة.";
+  nextBtn.disabled=!ok;
 }
 
-.chips .chip {
-  font-size: 1.375rem; /* 22px */
-  padding: 0.45rem 1.2rem;
-  border: none !important; /* بدون إطار */
-  color: #000 !important; /* أسود فقط */
-  background: transparent !important; /* بدون صندوق */
-  margin: 0.3rem;
-  font-weight: 600;
-  transition: transform 0.2s ease;
-  box-shadow: none !important;
+/* التالي */
+function next(){
+  state.idx=(state.idx+1)%ITEMS.length;
+  Object.assign(state,{phase:"pickM",mCase:"m",kCase:"m",verb:null,mSelected:false,kSelected:false,mWord:"",kWord:""});
+  feedback.textContent=""; feedback.className="feedback hidden"; nextBtn.disabled=true;
+  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+  renderLive(); renderUI();
 }
 
-/* تأثير خفيف عند التمرير */
-.chips .chip:hover {
-  transform: scale(1.07);
-  background: #f5f5f5 !important; /* رمادي فاتح جدًا */
-  color: #000 !important;
-  border: none !important;
-}
-
-/* عند التحديد */
-.chips .chip.active {
-  background: transparent !important;
-  color: #000 !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* أزرار اختيار الصيغ */
-.forms {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 1rem;
-}
-
-.form-chip {
-  font-size: 1.2rem;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  padding: 0.4rem 0.8rem;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.form-chip:hover {
-  background: #e0e7ff;
-  color: var(--blue);
-}
-
-.form-chip.sel {
-  background: var(--blue);
-  color: white;
-  border-color: var(--blue);
-}
-
-/* تعليمات المساعدة */
-.helper {
-  color: var(--muted);
-  font-size: 1.1rem;
-  margin: 0.5rem 0 1rem;
-}
-
-/* ملاحظات التقييم */
-.feedback {
-  font-size: 1.2rem;
-  margin-top: 1rem;
-  padding: 0.6rem;
-  border-radius: 8px;
-  min-height: 1.6rem;
-}
-
-.feedback.ok {
-  color: var(--ok);
-  background: rgba(22, 163, 74, 0.1);
-}
-
-.feedback.bad {
-  color: var(--brand);
-  background: rgba(225, 29, 72, 0.08);
-}
-
-.feedback.hidden {
-  visibility: hidden;
-}
-
-/* أزرار التحقق والتنقل */
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 1.5rem;
-}
-
-button {
-  font-family: inherit;
-  border: none;
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-#checkBtn,
-#nextBtn {
-  font-size: 1.2rem;
-  padding: 0.5rem 1.2rem;
-  border-radius: 10px;
-  color: white;
-  background: var(--brand);
-}
-
-#checkBtn:disabled,
-#nextBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-#nextBtn {
-  background: var(--blue);
-}
-
-#twoStep {
-  margin-right: 6px;
-}
-
-footer {
-  margin-top: 2rem;
-  font-size: 1rem;
-  color: var(--muted);
-}
-
-footer span {
-  color: var(--brand);
-  font-weight: bold;
-}
-
-.form {
-  font-size: 28px;
-  padding: 8px 16px;
-  margin: 6px;
-  border-radius: 10px;
-  font-weight: bold;
-}
-.red { color: #dc2626; }
-.blue { color: #2563eb; }
-.green { color: #16a34a; }
-.chosen {
-  font-size: 30px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
+/* تشغيل */
+checkBtn.onclick=check; nextBtn.onclick=next;
+renderLive(); renderUI();
