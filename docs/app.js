@@ -62,33 +62,58 @@ const ITEMS = [
 ];
 
 /* ⚙️ الحالة */
-const state = { idx: 0, verb: null, phase: "pickM", mCase: "m", kCase: "m", mSel: false, kSel: false, mWord: "", kWord: "" };
+const state = {
+  idx: 0,
+  phase: "pickM",
+  mCase: "m",
+  kCase: "m",
+  verb: null,
+  mSel: false,
+  kSel: false,
+  mWord: "",
+  kWord: ""
+};
 
 const $ = s => document.querySelector(s);
-const live = $("#live"), mubSec = $("#mubSection"), khabSec = $("#khabSection"), feedback = $("#feedback"), checkBtn = $("#checkBtn"), nextBtn = $("#nextBtn");
+const live = $("#live"),
+  mubSec = $("#mubSection"),
+  khabSec = $("#khabSection"),
+  feedback = $("#feedback"),
+  checkBtn = $("#checkBtn"),
+  nextBtn = $("#nextBtn");
 
-/* 🔹 عرض الجملة */
+/* رسم الجملة */
 function renderLive() {
   const { mub, khb } = ITEMS[state.idx];
   const m = mub[state.mCase];
   const k = khb[state.kCase];
-  const verb = state.verb ? `<span class='verb green'>${state.verb}</span>` : "";
-  const mHTML = m.split(" ").map(w => `<span class='word ${state.mSel && state.mWord === w ? "red" : ""}' data-part='m'>${w}</span>`).join(" ");
-  const kHTML = k.split(" ").map(w => `<span class='word ${state.kSel && state.kWord === w ? "blue" : ""}' data-part='k'>${w}</span>`).join(" ");
-  live.innerHTML = `${verb} ${mHTML} ${kHTML}`;
-  bindClicks();
+  const verb = state.verb ? `<span class='verb green'>${state.verb}</span> ` : "";
+  const mHTML = m.split(" ").map(w =>
+    `<span class='word ${state.mSel && state.mWord === w ? "red" : ""}' data-part='m'>${w}</span>`
+  ).join(" ");
+  const kHTML = k.split(" ").map(w =>
+    `<span class='word ${state.kSel && state.kWord === w ? "blue" : ""}' data-part='k'>${w}</span>`
+  ).join(" ");
+  live.innerHTML = `${verb}${mHTML} ${kHTML}`;
+  bindWordClicks();
 }
 
 /* اختيار المبتدأ والخبر */
-function bindClicks() {
+function bindWordClicks() {
   live.querySelectorAll(".word").forEach(w => {
     w.onclick = () => {
       if (state.phase === "pickM" && w.dataset.part === "m") {
-        state.mSel = true; state.mWord = w.textContent; state.phase = "pickK";
-        feedback.textContent = "اختر الخبر."; renderLive();
+        state.mSel = true;
+        state.mWord = w.textContent;
+        state.phase = "pickK";
+        feedback.textContent = "اختر الخبر.";
+        renderLive();
       } else if (state.phase === "pickK" && w.dataset.part === "k") {
-        state.kSel = true; state.kWord = w.textContent; state.phase = "pickVerb";
-        feedback.textContent = "اختر الأداة الناسخة."; renderVerbOptions();
+        state.kSel = true;
+        state.kWord = w.textContent;
+        state.phase = "pickVerb";
+        feedback.textContent = "اختر الأداة الناسخة.";
+        renderVerbOptions();
       }
     };
   });
@@ -97,59 +122,82 @@ function bindClicks() {
 /* الأدوات الناسخة */
 function renderVerbOptions() {
   mubSec.innerHTML = `
-  <div class='forms'>
-    <button class='form' onclick="chooseVerb('إِنَّ')">إِنَّ</button>
-    <button class='form' onclick="chooseVerb('كَأَنَّ')">كَأَنَّ</button>
-    <button class='form' onclick="chooseVerb('لَيْتَ')">لَيْتَ</button>
-    <button class='form' onclick="chooseVerb('لَعَلَّ')">لَعَلَّ</button>
-  </div>`;
+    <div class='forms'>
+      <button class='form' onclick="chooseVerb('إنَّ')">إنَّ</button>
+      <button class='form' onclick="chooseVerb('كأنَّ')">كأنَّ</button>
+      <button class='form' onclick="chooseVerb('ليتَ')">ليتَ</button>
+      <button class='form' onclick="chooseVerb('لعلَّ')">لعلَّ</button>
+    </div>`;
   khabSec.innerHTML = "";
 }
 
 /* عند اختيار الأداة */
 function chooseVerb(v) {
-  state.verb = v; state.phase = "cases";
-  feedback.textContent = `الآن اختر حالات اسم ${v} وخبرها.`; renderLive(); renderForms();
+  state.verb = v;
+  state.phase = "cases";
+  feedback.textContent = `الآن اختر حالات اسم ${v} وخبرها.`;
+  renderLive();
+  renderForms();
 }
 
 /* عرض حالات الاسم والخبر */
 function renderForms() {
   const { mub, khb } = ITEMS[state.idx];
   mubSec.innerHTML = `<h3>اسم ${state.verb}</h3>
-  <div class='forms'>
-    <button class='form' onclick="setCase('m')">${mub.m}</button>
-    <button class='form' onclick="setCase('a')">${mub.a}</button>
-    <button class='form' onclick="setCase('j')">${mub.j}</button>
-  </div>`;
+    <div class='forms'>
+      <button class='form' onclick="setCase('m')">${mub.m}</button>
+      <button class='form' onclick="setCase('a')">${mub.a}</button>
+      <button class='form' onclick="setCase('j')">${mub.j}</button>
+    </div>`;
   khabSec.innerHTML = `<h3>خبر ${state.verb}</h3>
-  <div class='forms'>
-    <button class='form' onclick="setKCase('m')">${khb.m}</button>
-    <button class='form' onclick="setKCase('a')">${khb.a}</button>
-    <button class='form' onclick="setKCase('j')">${khb.j}</button>
-  </div>`;
+    <div class='forms'>
+      <button class='form' onclick="setKCase('m')">${khb.m}</button>
+      <button class='form' onclick="setKCase('a')">${khb.a}</button>
+      <button class='form' onclick="setKCase('j')">${khb.j}</button>
+    </div>`;
 }
 
 /* ضبط الحالات */
-function setCase(c){state.mCase=c;renderLive();}
-function setKCase(c){state.kCase=c;renderLive();checkBtn.disabled=false;}
+function setCase(c) {
+  state.mCase = c;
+  renderLive();
+}
+function setKCase(c) {
+  state.kCase = c;
+  renderLive();
+  checkBtn.disabled = false;
+}
 
-/* تحقق */
-function check(){
-  const ok=state.mCase==="a"&&state.kCase==="m";
-  feedback.textContent=ok?"✅ أحسنت! الاسم منصوب والخبر مرفوع.":"❌ حاول مرة أخرى.";
-  nextBtn.disabled=!ok;
+/* التحقق */
+function check() {
+  const ok = state.mCase === "a" && state.kCase === "m";
+  feedback.textContent = ok
+    ? "✅ أحسنت! الاسم منصوب والخبر مرفوع."
+    : "❌ حاول مرة أخرى.";
+  nextBtn.disabled = !ok;
 }
 
 /* التالي */
-function next(){
-  state.idx=(state.idx+1)%ITEMS.length;
-  Object.assign(state,{verb:null,phase:"pickM",mSel:false,kSel:false,mCase:"m",kCase:"m"});
-  feedback.textContent="اختر المبتدأ.";checkBtn.disabled=true;nextBtn.disabled=true;
-  mubSec.innerHTML="";khabSec.innerHTML="";renderLive();
+function next() {
+  state.idx = (state.idx + 1) % ITEMS.length;
+  Object.assign(state, {
+    phase: "pickM",
+    mCase: "m",
+    kCase: "m",
+    verb: null,
+    mSel: false,
+    kSel: false,
+    mWord: "",
+    kWord: ""
+  });
+  feedback.textContent = "اختر المبتدأ.";
+  mubSec.innerHTML = "";
+  khabSec.innerHTML = "";
+  renderLive();
 }
 
 /* التشغيل */
-checkBtn.onclick=check;
-nextBtn.onclick=next;
+checkBtn.onclick = check;
+nextBtn.onclick = next;
 renderLive();
-feedback.textContent="اختر المبتدأ.";
+feedback.textContent = "اختر المبتدأ.";
