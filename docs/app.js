@@ -1,15 +1,6 @@
 /* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
-/* نسخة كاملة بـ ٦٠ جملة + إصلاحات:
-   1) الجملة تظهر مباشرة.
-   2) يختار المبتدأ → لونه أحمر.
-   3) يختار الخبر → لونه أزرق.
-   4) يختار الأداة الناسخة → تظهر في الجملة باللون الأخضر.
-   5) إذا اختار (ليت) أو (لعل) يظهر: اسم ليت / خبر ليت أو اسم لعل / خبر لعل.
-   6) خيارات الاسم والخبر = الكلمة المختارة فقط بثلاث حركات ( ُ ، َ ، ِ ) بدون كلمات (رفع/نصب/جر).
-   7) يبقى التلوين في الجملة حتى بعد تغيير الحركة (نعمل تطبيع للكلمة عشان ما يروح اللون).
-*/
 
-/* =============== الجمل (٦٠ جملة) =============== */
+/* الجمل (٦٠ جملة) */
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
   { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
@@ -73,10 +64,10 @@ const ITEMS = [
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} }
 ];
 
-/* =============== الحالة العامة =============== */
+/* الحالة */
 const state = {
   idx: 0,
-  phase: "pickM",   // pickM → pickK → verb → cases
+  phase: "pickM",
   mCase: "m",
   kCase: "m",
   verb: null,
@@ -86,73 +77,69 @@ const state = {
   kWord: ""
 };
 
-/* =============== عناصر DOM =============== */
+/* عناصر DOM */
 const $ = s => document.querySelector(s);
-const live   = $("#live");
-const mubSec = $("#mubSection");
-const khabSec= $("#khabSection");
-const feedback = $("#feedback");
-const checkBtn = $("#checkBtn");
-const nextBtn  = $("#nextBtn");
+const live = $("#live"),
+      mubSec = $("#mubSection"),
+      khabSec = $("#khabSection"),
+      feedback = $("#feedback"),
+      checkBtn = $("#checkBtn"),
+      nextBtn = $("#nextBtn");
 
-/* =============== دوال مساعدة =============== */
+/* أدوات */
 function current(){ return ITEMS[state.idx]; }
+function form(f, k){ return f[k]; }
+function wordsOf(t){ return t.trim().split(/\s+/); }
 
-/* نطبع التشكيل الأخير من الكلمة حتى نقدر نضيف حركاتنا بدون تكرار */
-function stripLastHaraka(w){
-  if(!w) return "";
-  // نحذف حركة واحدة في آخر الكلمة إن وُجدت
-  return w.replace(/[ًٌٍَُِّْ]$/u, "");
-}
-/* نطبع الكلمة بدون حركة أخيرة للمقارنة (حتى ما يضيع التلوين) */
-function normalizeWord(w){
-  if(!w) return "";
-  return w.replace(/[ًٌٍَُِّْ]$/u, "");
-}
-/* نقسم النص لكلمات */
-function wordsOf(t){
-  return t.trim().split(/\s+/);
+/* دالة تنظّف الحرف الناسخ وتعيد اسم اللوحة الصحيح */
+function normalizeVerb(v){
+  if(!v) return "إنَّ";
+  // شيل المسافات
+  v = v.trim();
+  // شيل التشكيل
+  v = v.replace(/[\u064B-\u0652]/g, "");
+  // الآن طابق
+  if (v === "ان" || v === "إن" || v === "انّ") return "إنَّ";
+  if (v === "ليت") return "ليت";
+  if (v === "لعل") return "لعلَّ";
+  if (v === "كأن" || v === "كان") return "كأنَّ";
+  return "إنَّ";
 }
 
-/* =============== عرض الجملة الأساسية =============== */
+/* عرض الجملة */
 function renderLive(){
   const { mub: M, khb: K } = current();
-  const mText = M[state.mCase];
-  const kText = K[state.kCase];
+  const m = form(M, state.mCase);
+  const k = form(K, state.kCase);
 
-  const mHtml = wordsOf(mText).map(w=>{
-    const sel = state.mSelected && normalizeWord(state.mWord) === normalizeWord(w);
-    return `<span class="token ${sel ? 'sel-m' : ''}" data-part="m">${w}</span>`;
-  }).join(" ");
+  const mHtml = wordsOf(m)
+    .map(w => `<span class="token ${state.mSelected && state.mWord === w ? 'sel-m' : ''}" data-part="m">${w}</span>`)
+    .join(" ");
 
-  const kHtml = wordsOf(kText).map(w=>{
-    const sel = state.kSelected && normalizeWord(state.kWord) === normalizeWord(w);
-    return `<span class="token ${sel ? 'sel-k' : ''}" data-part="k">${w}</span>`;
-  }).join(" ");
+  const kHtml = wordsOf(k)
+    .map(w => `<span class="token ${state.kSelected && state.kWord === w ? 'sel-k' : ''}" data-part="k">${w}</span>`)
+    .join(" ");
 
-  const vHtml = state.verb ? `<span class="verb">${state.verb}</span> ` : "";
+  const v = state.verb ? `<span class="verb">${state.verb}</span>` : "";
 
-  live.innerHTML = `${vHtml}${mHtml} ${kHtml}`;
+  live.innerHTML = `${v}${mHtml} ${kHtml}`;
 
   bindClicks();
-
-  // التحقق ممنوع إلا بعد الحالات
-  if (checkBtn) checkBtn.disabled = state.phase !== "cases";
-  if (nextBtn)  nextBtn.disabled  = true;
+  checkBtn.disabled = state.phase !== "cases";
+  nextBtn.disabled = true;
 }
 
-/* =============== ربط النقر على الكلمات =============== */
+/* اختيار المبتدأ والخبر */
 function bindClicks(){
-  live.querySelectorAll(".token").forEach(tok=>{
-    tok.onclick = ()=>{
-      const part = tok.dataset.part;
-      if(state.phase === "pickM" && part === "m"){
+  live.querySelectorAll(".token").forEach(tok => {
+    tok.onclick = () => {
+      if (state.phase === "pickM" && tok.dataset.part === "m") {
         state.mSelected = true;
         state.mWord = tok.textContent;
         state.phase = "pickK";
         renderLive();
         renderUI();
-      }else if(state.phase === "pickK" && part === "k"){
+      } else if (state.phase === "pickK" && tok.dataset.part === "k") {
         state.kSelected = true;
         state.kWord = tok.textContent;
         state.phase = "verb";
@@ -163,149 +150,129 @@ function bindClicks(){
   });
 }
 
-/* =============== واجهة المراحل =============== */
+/* واجهة المراحل */
 function renderUI(){
-  const hint = t => {
-    feedback.className = "feedback ok";
-    feedback.textContent = t;
-  };
+  const hint = t => { feedback.className = "feedback ok"; feedback.textContent = t; };
 
-  if(state.phase === "pickM"){
-    mubSec.innerHTML  = "<h3>حدد المبتدأ (تصبح الكلمة حمراء)</h3>";
+  if (state.phase === "pickM") {
+    mubSec.innerHTML = "<h3>حدد المبتدأ</h3>";
     khabSec.innerHTML = "";
     renderChips(false);
-    feedback.className = "feedback hidden";
-    feedback.textContent = "";
-  }else if(state.phase === "pickK"){
-    hint("الآن اختر الخبر (تصبح الكلمة زرقاء).");
+  } else if (state.phase === "pickK") {
+    hint("حدد الخبر.");
     renderChips(false);
-  }else if(state.phase === "verb"){
+  } else if (state.phase === "verb") {
     hint("اختر الأداة الناسخة.");
     renderChips(true);
-  }else if(state.phase === "cases"){
-    hint("اختر صورة الكلمة بالحركات.");
+  } else if (state.phase === "cases") {
+    hint("اختر الحركات.");
     renderChips(true);
     renderForms();
   }
 }
 
-/* =============== الأزرار الناسخة =============== */
+/* الأزرار (إن – ليت – لعل – كأن) */
 function renderChips(show){
   const chips = document.querySelector(".chips");
-  if(!chips) return;
+  if (!chips) return;
   chips.style.display = show ? "block" : "none";
 
-  if(show){
-    chips.querySelectorAll(".chip").forEach(btn=>{
-      btn.classList.toggle("active", btn.dataset.verb === state.verb);
-      btn.onclick = ()=>{
-        // تفعيل زر واحد
-        chips.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-        btn.classList.add("active");
-        state.verb = btn.dataset.verb;   // إنَّ / ليت / لعل / كأن
-        state.phase = "cases";
-        renderLive();
-        renderUI();
-      };
-    });
-  }
+  chips.querySelectorAll(".chip").forEach(b => {
+    b.classList.toggle("active", b.dataset.verb === state.verb);
+    b.onclick = () => {
+      chips.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
+      b.classList.add("active");
+      state.verb = b.dataset.verb;
+      state.phase = "cases";
+      renderLive();
+      renderUI();
+    };
+  });
 }
 
-/* =============== عرض اسم الحرف الناسخ وخبره =============== */
+/* عرض خيارات اسم/خبر الحرف الناسخ */
 function renderForms(){
-  // خريطة لتصحيح العنوان
-  const verbTitles = {
-    "إنَّ": "إنَّ",
-    "إن": "إنَّ",
-    "ليت": "ليت",
-    "لعل": "لعلَّ",
-    "كأن": "كأنَّ",
-    "كأنَّ": "كأنَّ"
-  };
-
-  const v = verbTitles[state.verb] || "إنَّ";
+  // هنا التعديل الحقيقي 👇
+  const v = normalizeVerb(state.verb);
   const nameLabel = `اسم ${v}`;
   const khabLabel = `خبر ${v}`;
 
-  // نأخذ الكلمة التي اختارها الطالب فقط ثم نركب عليها الحركات
-  const baseM = stripLastHaraka(state.mWord || "—");
-  const baseK = stripLastHaraka(state.kWord || "—");
+  const m = state.mWord || "—";
+  const k = state.kWord || "—";
 
   mubSec.innerHTML = `
     <h3>${nameLabel}</h3>
+    <div class="chosen">${m}</div>
     <div class="forms" id="mForms">
-      <button class="form" data-case="m">${baseM}ُ</button>
-      <button class="form" data-case="a">${baseM}َ</button>
-      <button class="form" data-case="j">${baseM}ِ</button>
+      <button class="form" data-case="m">${m}ُ</button>
+      <button class="form" data-case="a">${m}َ</button>
+      <button class="form" data-case="j">${m}ِ</button>
     </div>
   `;
 
   khabSec.innerHTML = `
     <h3>${khabLabel}</h3>
+    <div class="chosen">${k}</div>
     <div class="forms" id="kForms">
-      <button class="form" data-case="m">${baseK}ُ</button>
-      <button class="form" data-case="a">${baseK}َ</button>
-      <button class="form" data-case="j">${baseK}ِ</button>
+      <button class="form" data-case="m">${k}ُ</button>
+      <button class="form" data-case="a">${k}َ</button>
+      <button class="form" data-case="j">${k}ِ</button>
     </div>
   `;
 
-  // ربط أزرار الاسم
-  document.querySelectorAll("#mForms .form").forEach(btn=>{
-    btn.onclick = ()=>{
-      state.mCase = btn.dataset.case;   // m / a / j
-      renderLive();                     // عشان تتغير الكلمة في الجملة
-      renderForms();                    // وعشان تبقى الأزرار محدثة
+  document.querySelectorAll("#mForms .form").forEach(b => {
+    b.onclick = () => {
+      state.mCase = b.dataset.case;
+      renderLive();
+      renderForms();
     };
   });
 
-  // ربط أزرار الخبر
-  document.querySelectorAll("#kForms .form").forEach(btn=>{
-    btn.onclick = ()=>{
-      state.kCase = btn.dataset.case;
+  document.querySelectorAll("#kForms .form").forEach(b => {
+    b.onclick = () => {
+      state.kCase = b.dataset.case;
       renderLive();
       renderForms();
     };
   });
 }
 
-/* =============== التحقق (نفس منطقك السابق) =============== */
+/* التحقق */
 function check(){
-  if(state.phase !== "cases"){
+  if (state.phase !== "cases") {
     feedback.className = "feedback bad";
-    feedback.textContent = "أكمل الخطوات: مبتدأ → خبر → أداة → الحركات.";
+    feedback.textContent = "أكمل الخطوات.";
     return;
   }
   const ok = state.mCase === "a" && state.kCase === "m";
   feedback.className = ok ? "feedback ok" : "feedback bad";
-  feedback.textContent = ok
-    ? "أحسنت! اسم إن منصوب وخبرها مرفوع."
-    : "جرّب أن تجعل الاسم بالفتحة والخبر بالضمة.";
-  if(nextBtn) nextBtn.disabled = !ok;
+  feedback.textContent = ok ? "أحسنت! اسم إن منصوب وخبرها مرفوع." : "جرّب: الاسم بالفتحة والخبر بالضمة.";
+  nextBtn.disabled = !ok;
 }
 
-/* =============== الجملة التالية =============== */
+/* التالي */
 function next(){
   state.idx = (state.idx + 1) % ITEMS.length;
-  state.phase = "pickM";
-  state.mCase = "m";
-  state.kCase = "m";
-  state.verb  = null;
-  state.mSelected = false;
-  state.kSelected = false;
-  state.mWord = "";
-  state.kWord = "";
+  Object.assign(state, {
+    phase: "pickM",
+    mCase: "m",
+    kCase: "m",
+    verb: null,
+    mSelected: false,
+    kSelected: false,
+    mWord: "",
+    kWord: ""
+  });
   feedback.textContent = "";
-  feedback.className   = "feedback hidden";
-  // إزالة تفعيل الحروف الناسخة
-  document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+  feedback.className = "feedback hidden";
+  nextBtn.disabled = true;
+  document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
   renderLive();
   renderUI();
 }
 
-/* =============== ربط الأزرار العامة =============== */
-if(checkBtn) checkBtn.onclick = check;
-if(nextBtn)  nextBtn.onclick  = next;
-
-/* =============== تشغيل أول جملة =============== */
+/* تشغيل */
+checkBtn.onclick = check;
+nextBtn.onclick = next;
 renderLive();
 renderUI();
