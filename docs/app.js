@@ -1,6 +1,6 @@
 /* إنَّ وأخواتها — إعداد وتطوير: الأستاذ يحيى بن محمد الدريبي */
 
-/* الجمل (٦٠ جملة) */
+/* 🟢 الجمل الستون */
 const ITEMS = [
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"جميلٌ",a:"جميلًا",j:"جميلٍ"} },
   { mub:{m:"الطالبُ المجتهدُ",a:"الطالبَ المجتهدَ",j:"الطالبِ المجتهدِ"}, khb:{m:"متفوّقٌ",a:"متفوّقًا",j:"متفوّقٍ"} },
@@ -15,7 +15,6 @@ const ITEMS = [
   { mub:{m:"القمرُ",a:"القمرَ",j:"القمرِ"}, khb:{m:"منيرٌ",a:"منيرًا",j:"منيرٍ"} },
   { mub:{m:"الشمسُ",a:"الشمسَ",j:"الشمسِ"}, khb:{m:"مشرقةٌ",a:"مشرقةً",j:"مشرقةٍ"} },
   { mub:{m:"السماءُ",a:"السماءَ",j:"السماءِ"}, khb:{m:"صافيةٌ",a:"صافيةً",j:"صافيةٍ"} },
-  { mub:{m:"المعلمُ الفاضلُ",a:"المعلمَ الفاضلَ",j:"المعلمِ الفاضلِ"}, khb:{m:"محبوبٌ",a:"محبوبًا",j:"محبوبٍ"} },
   { mub:{m:"الفتاةُ الذكيةُ",a:"الفتاةَ الذكيةَ",j:"الفتاةِ الذكيةِ"}, khb:{m:"ناجحةٌ",a:"ناجحةً",j:"ناجحةٍ"} },
   { mub:{m:"المملكةُ الغاليةُ",a:"المملكةَ الغاليةَ",j:"المملكةِ الغاليةِ"}, khb:{m:"آمنةٌ",a:"آمنةً",j:"آمنةٍ"} },
   { mub:{m:"الطالبُ النشيطُ",a:"الطالبَ النشيطَ",j:"الطالبِ النشيطِ"}, khb:{m:"يشاركُ أصدقاءَهُ",a:"يشاركَ أصدقاءَهُ",j:"يشاركِ أصدقاءَهُ"} },
@@ -28,16 +27,10 @@ const ITEMS = [
   { mub:{m:"الحديقةُ",a:"الحديقةَ",j:"الحديقةِ"}, khb:{m:"جميلةٌ",a:"جميلةً",j:"جميلةٍ"} },
   { mub:{m:"الموظفُ النشيطُ",a:"الموظفَ النشيطَ",j:"الموظفِ النشيطِ"}, khb:{m:"متميزٌ",a:"متميزًا",j:"متميزٍ"} },
   { mub:{m:"العلمُ النافعُ",a:"العلمَ النافعَ",j:"العلمِ النافعِ"}, khb:{m:"سلاحٌ",a:"سلاحًا",j:"سلاحٍ"} },
-  { mub:{m:"الطفلُ",a:"الطفلَ",j:"الطفلِ"}, khb:{m:"بريءٌ",a:"بريئًا",j:"بريءٍ"} },
   { mub:{m:"المعلمُ المخلصُ",a:"المعلمَ المخلصَ",j:"المعلمِ المخلصِ"}, khb:{m:"محترمٌ",a:"محترمًا",j:"محترمٍ"} },
   { mub:{m:"الوطنُ الغاليُّ",a:"الوطنَ الغاليَ",j:"الوطنِ الغاليِ"}, khb:{m:"مزدهرٌ بالعقولِ",a:"مزدهرًا بالعقولِ",j:"مزدهرٍ بالعقولِ"} },
   { mub:{m:"الحديقةُ الواسعةُ",a:"الحديقةَ الواسعةَ",j:"الحديقةِ الواسعةِ"}, khb:{m:"خضراءُ",a:"خضراءَ",j:"خضراءِ"} },
-  { mub:{m:"القمرُ المنيرُ",a:"القمرَ المنيرَ",j:"القمرِ المنيرِ"}, khb:{m:"يضيءُ السماءَ",a:"يضيءَ السماءَ",j:"يضيءِ السماءِ"} },
   { mub:{m:"المملكةُ العربيةُ السعوديةُ",a:"المملكةَ العربيةَ السعوديةَ",j:"المملكةِ العربيةِ السعوديةِ"}, khb:{m:"شامخةٌ بالعطاءِ",a:"شامخةً بالعطاءِ",j:"شامخةٍ بالعطاءِ"} },
-  { mub:{m:"المعلمُ",a:"المعلمَ",j:"المعلمِ"}, khb:{m:"ناجحٌ",a:"ناجحًا",j:"ناجحٍ"} },
-  { mub:{m:"الشجرةُ",a:"الشجرةَ",j:"الشجرةِ"}, khb:{m:"خضراءُ",a:"خضراءَ",j:"خضراءِ"} },
-  { mub:{m:"الطالبُ المؤدبُ",a:"الطالبَ المؤدبَ",j:"الطالبِ المؤدبِ"}, khb:{m:"محبوبٌ",a:"محبوبًا",j:"محبوبٍ"} },
-  { mub:{m:"البيتُ الجميلُ",a:"البيتَ الجميلَ",j:"البيتِ الجميلِ"}, khb:{m:"واسعٌ",a:"واسعًا",j:"واسعٍ"} },
   { mub:{m:"الوطنُ",a:"الوطنَ",j:"الوطنِ"}, khb:{m:"مزدهرٌ",a:"مزدهرًا",j:"مزدهرٍ"} }
 ];
 
@@ -45,31 +38,37 @@ const ITEMS = [
 const state={idx:0,verb:null,phase:"pickVerb",mCase:"m",kCase:"m",mSel:false,kSel:false,mWord:"",kWord:""};
 
 const $=s=>document.querySelector(s);
-const live=$("#live"),feedback=$("#feedback"),checkBtn=$("#checkBtn"),nextBtn=$("#nextBtn");
+const live=$("#live"),mubSec=$("#mubSection"),khabSec=$("#khabSection"),feedback=$("#feedback"),checkBtn=$("#checkBtn"),nextBtn=$("#nextBtn");
 
-/* عرض الجملة */
+/* 🔹 عرض الجملة */
 function renderLive(){
   const {mub,khb}=ITEMS[state.idx];
   const m=mub[state.mCase];
   const k=khb[state.kCase];
-  const verb=state.verb?`<span class="verb">${state.verb}</span>`:"";
-  const mHTML=m.split(" ").map(w=>`<span class="word ${state.mSel&&state.mWord===w?'blue':''}" data-part="m">${w}</span>`).join(" ");
-  const kHTML=k.split(" ").map(w=>`<span class="word ${state.kSel&&state.kWord===w?'red':''}" data-part="k">${w}</span>`).join(" ");
+  const verb=state.verb?`<span class='verb green'>${state.verb}</span>`:"";
+  const mHTML=m.split(" ").map(w=>`<span class='word ${state.mSel&&state.mWord===w?'blue':''}' data-part='m'>${w}</span>`).join(" ");
+  const kHTML=k.split(" ").map(w=>`<span class='word ${state.kSel&&state.kWord===w?'red':''}' data-part='k'>${w}</span>`).join(" ");
   live.innerHTML=`${verb} ${mHTML} ${kHTML}`;
   bindClicks();
 }
 
-/* اختيار المبتدأ والخبر */
+/* 🔸 اختيار المبتدأ والخبر */
 function bindClicks(){
   live.querySelectorAll(".word").forEach(w=>{
     w.onclick=()=>{
-      if(state.phase==="pickM" && w.dataset.part==="m"){state.mSel=true;state.mWord=w.textContent;state.phase="pickK";feedback.textContent="اختر الخبر.";renderLive();}
-      else if(state.phase==="pickK" && w.dataset.part==="k"){state.kSel=true;state.kWord=w.textContent;state.phase="cases";feedback.textContent="اختر الحركات المناسبة.";renderForms();}
+      if(state.phase==="pickM" && w.dataset.part==="m"){
+        state.mSel=true;state.mWord=w.textContent;state.phase="pickK";
+        feedback.textContent="اختر الخبر.";renderLive();
+      }else if(state.phase==="pickK" && w.dataset.part==="k"){
+        state.kSel=true;state.kWord=w.textContent;state.phase="cases";
+        feedback.textContent="اختر الحالات الإعرابية.";
+        renderForms();
+      }
     };
   });
 }
 
-/* اختيار الأداة الناسخة */
+/* 🔸 اختيار الأداة الناسخة */
 function chooseVerb(v){
   state.verb=v;
   state.phase="pickM";
@@ -77,44 +76,51 @@ function chooseVerb(v){
   renderLive();
 }
 
-/* عرض الأزرار الخاصة بالأدوات */
+/* 🔹 واجهة اختيار الأدوات */
 function renderUI(){
   if(state.phase==="pickVerb"){
-    live.innerHTML="";
+    renderLive();
+    mubSec.innerHTML=`
+      <div class='forms'>
+        <button class='form' onclick="chooseVerb('إِنَّ')">إِنَّ</button>
+        <button class='form' onclick="chooseVerb('كَأَنَّ')">كَأَنَّ</button>
+        <button class='form' onclick="chooseVerb('لَيْتَ')">لَيْتَ</button>
+        <button class='form' onclick="chooseVerb('لَعَلَّ')">لَعَلَّ</button>
+      </div>`;
+    khabSec.innerHTML="";
     feedback.textContent="اختر الأداة الناسخة:";
-    $("#mubSection").innerHTML=`
-      <button class='form' onclick="chooseVerb('إِنَّ')">إِنَّ</button>
-      <button class='form' onclick="chooseVerb('كَأَنَّ')">كَأَنَّ</button>
-      <button class='form' onclick="chooseVerb('لَيْتَ')">لَيْتَ</button>
-      <button class='form' onclick="chooseVerb('لَعَلَّ')">لَعَلَّ</button>`;
   }
 }
 
-/* عرض الحركات */
+/* 🔹 عرض أزرار الحركات */
 function renderForms(){
   const {mub,khb}=ITEMS[state.idx];
-  $("#mubSection").innerHTML=`<h3>اسم ${state.verb}</h3>
-    <button class='form' onclick="setCase('m')">${mub.m}</button>
-    <button class='form' onclick="setCase('a')">${mub.a}</button>
-    <button class='form' onclick="setCase('j')">${mub.j}</button>`;
-  $("#khabSection").innerHTML=`<h3>خبر ${state.verb}</h3>
-    <button class='form' onclick="setKCase('m')">${khb.m}</button>
-    <button class='form' onclick="setKCase('a')">${khb.a}</button>
-    <button class='form' onclick="setKCase('j')">${khb.j}</button>`;
+  mubSec.innerHTML=`<h3>اسم ${state.verb}</h3>
+    <div class='forms'>
+      <button class='form' onclick="setCase('m')">${mub.m}</button>
+      <button class='form' onclick="setCase('a')">${mub.a}</button>
+      <button class='form' onclick="setCase('j')">${mub.j}</button>
+    </div>`;
+  khabSec.innerHTML=`<h3>خبر ${state.verb}</h3>
+    <div class='forms'>
+      <button class='form' onclick="setKCase('m')">${khb.m}</button>
+      <button class='form' onclick="setKCase('a')">${khb.a}</button>
+      <button class='form' onclick="setKCase('j')">${khb.j}</button>
+    </div>`;
 }
 
-/* ضبط الحالات */
+/* 🔹 تغيير الحالة الإعرابية */
 function setCase(c){state.mCase=c;renderLive();}
 function setKCase(c){state.kCase=c;renderLive();checkBtn.disabled=false;}
 
-/* تحقق */
+/* 🔸 التحقق */
 function check(){
   const ok=state.mCase==="a"&&state.kCase==="m";
   feedback.textContent=ok?"✅ أحسنت! الاسم منصوب والخبر مرفوع.":"❌ حاول مرة أخرى.";
   nextBtn.disabled=!ok;
 }
 
-/* التالي */
+/* 🔸 التالي */
 function next(){
   state.idx=(state.idx+1)%ITEMS.length;
   Object.assign(state,{verb:null,phase:"pickVerb",mSel:false,kSel:false,mCase:"m",kCase:"m"});
@@ -123,7 +129,7 @@ function next(){
   renderUI();
 }
 
-/* التشغيل */
+/* 🔸 تشغيل */
 checkBtn.onclick=check;
 nextBtn.onclick=next;
 renderUI();
