@@ -40,14 +40,15 @@ const ITEMS = [
   { mub:{m:"القمرُ",a:"القمرَ",j:"القمرِ"}, khb:{m:"منيرٌ",a:"منيرًا",j:"منيرٍ"} }
 ];
 
-/* الحالة العامة */
-const state = { idx: 0, phase:"pickM", mCase:"m", kCase:"m", verb:null, mSelected:false, kSelected:false, mWord:"", kWord:"" };
+/* الحالة */
+const state = { idx:0, phase:"pickM", mCase:"m", kCase:"m", verb:null, mSelected:false, kSelected:false, mWord:"", kWord:"" };
 
 /* عناصر DOM */
-const $ = s=>document.querySelector(s);
-const live=$("#live"),mubSec=$("#mubSection"),khabSec=$("#khabSection"),feedback=$("#feedback"),checkBtn=$("#checkBtn"),nextBtn=$("#nextBtn");
+const $=s=>document.querySelector(s);
+const live=$("#live"), mubSec=$("#mubSection"), khabSec=$("#khabSection"),
+feedback=$("#feedback"), checkBtn=$("#checkBtn"), nextBtn=$("#nextBtn");
 
-/* دوال مساعدة */
+/* أدوات */
 function current(){return ITEMS[state.idx];}
 function form(f,k){return f[k];}
 function wordsOf(t){return t.trim().split(/\s+/);}
@@ -59,11 +60,12 @@ function renderLive(){
   const mHtml=wordsOf(m).map(w=>`<span class="token ${state.mSelected&&state.mWord===w?'sel-m':''}" data-part="m">${w}</span>`).join(" ");
   const kHtml=wordsOf(k).map(w=>`<span class="token ${state.kSelected&&state.kWord===w?'sel-k':''}" data-part="k">${w}</span>`).join(" ");
   const v=state.verb?`<span class="verb">${state.verb}</span>`:"";
-  live.innerHTML=`${v}${mHtml} ${kHtml}`; bindClicks();
+  live.innerHTML=`${v}${mHtml} ${kHtml}`;
+  bindClicks();
   checkBtn.disabled=state.phase!=="cases"; nextBtn.disabled=true;
 }
 
-/* اختيار الكلمات */
+/* اختيار */
 function bindClicks(){
   live.querySelectorAll(".token").forEach(tok=>{
     tok.onclick=()=>{
@@ -78,16 +80,16 @@ function bindClicks(){
   });
 }
 
-/* عرض الواجهة */
+/* واجهة */
 function renderUI(){
   const hint=t=>{feedback.className="feedback ok";feedback.textContent=t;};
   if(state.phase==="pickM"){mubSec.innerHTML="<h3>حدد المبتدأ</h3>";khabSec.innerHTML="";renderChips(false);}
-  else if(state.phase==="pickK"){mubSec.innerHTML="<h3>المبتدأ محدد</h3>";renderChips(false);hint("الآن حدد الخبر.");}
-  else if(state.phase==="verb"){mubSec.innerHTML="<h3>اختر الأداة الناسخة</h3>";renderChips(true);}
+  else if(state.phase==="pickK"){hint("حدد الخبر.");renderChips(false);}
+  else if(state.phase==="verb"){hint("اختر الأداة الناسخة.");renderChips(true);}
   else if(state.phase==="cases"){hint("اختر الحركات.");renderChips(true);renderForms();}
 }
 
-/* أدوات النسخ */
+/* الأدوات */
 function renderChips(show){
   const chips=document.querySelector(".chips"); if(!chips)return;
   chips.style.display=show?"block":"none";
@@ -101,27 +103,31 @@ function renderChips(show){
   });
 }
 
-/* عرض الحالات */
+/* عرض الحركات */
 function renderForms(){
-  const verbNames={"إنَّ":"إنَّ","ليت":"ليت","لعل":"لعلَّ","كأنَّ":"كأنَّ"};
-  const v=state.verb||"إنَّ";
-  const nameLabel=`اسم ${verbNames[v]}`,khabLabel=`خبر ${verbNames[v]}`;
-  const {mub,khb}=current();
+  const verbs={"إنَّ":"إنَّ","إن":"إنَّ","ليت":"ليت","لعل":"لعلَّ","كأن":"كأنَّ","كأنَّ":"كأنَّ"};
+  const v=verbs[state.verb]||"إنَّ";
+  const nameLabel=`اسم ${v}`, khabLabel=`خبر ${v}`;
+  const m=state.mWord||"—", k=state.kWord||"—";
 
-  mubSec.innerHTML=`<h3>${nameLabel}</h3><div>${state.mWord}</div>
+  mubSec.innerHTML=`<h3>${nameLabel}</h3>
+  <div class="chosen">${m}</div>
   <div class="forms" id="mForms">
-  <button data-case="m">${mub.m}</button>
-  <button data-case="a">${mub.a}</button>
-  <button data-case="j">${mub.j}</button></div>`;
-  
-  khabSec.innerHTML=`<h3>${khabLabel}</h3><div>${state.kWord}</div>
-  <div class="forms" id="kForms">
-  <button data-case="m">${khb.m}</button>
-  <button data-case="a">${khb.a}</button>
-  <button data-case="j">${khb.j}</button></div>`;
+    <button class="form red" data-case="a">${m}َ</button>
+    <button class="form blue" data-case="m">${m}ُ</button>
+    <button class="form green" data-case="j">${m}ِ</button>
+  </div>`;
 
-  document.querySelectorAll("#mForms button").forEach(b=>b.onclick=()=>{state.mCase=b.dataset.case;renderLive();renderForms();});
-  document.querySelectorAll("#kForms button").forEach(b=>b.onclick=()=>{state.kCase=b.dataset.case;renderLive();renderForms();});
+  khabSec.innerHTML=`<h3>${khabLabel}</h3>
+  <div class="chosen">${k}</div>
+  <div class="forms" id="kForms">
+    <button class="form red" data-case="a">${k}َ</button>
+    <button class="form blue" data-case="m">${k}ُ</button>
+    <button class="form green" data-case="j">${k}ِ</button>
+  </div>`;
+
+  document.querySelectorAll("#mForms .form").forEach(b=>b.onclick=()=>{state.mCase=b.dataset.case;renderLive();renderForms();});
+  document.querySelectorAll("#kForms .form").forEach(b=>b.onclick=()=>{state.kCase=b.dataset.case;renderLive();renderForms();});
 }
 
 /* التحقق */
@@ -142,6 +148,6 @@ function next(){
   renderLive(); renderUI();
 }
 
-/* التشغيل */
-$("#checkBtn").onclick=check; $("#nextBtn").onclick=next;
+/* تشغيل */
+checkBtn.onclick=check; nextBtn.onclick=next;
 renderLive(); renderUI();
